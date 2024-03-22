@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Check if IFS is provided
+if [ -z "$1" ]; then
+    # If no IFS is provided, treat "//" exactly as "#"
+    while IFS= read -r line; do 
+        echo "$line" | sed -E "s/^(\ *)(# ?)?/\1/"
+    done
+else
+    # If IFS is provided, use it to treat "//" exactly as specified
+    while IFS= read -r line; do 
+        echo "$line" | sed -E "s/^(\ *)[$1]+ */\1/"
+    done
+fi

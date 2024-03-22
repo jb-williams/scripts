@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd "${WIKIDIR}" || exit 1
+/opt/nvim-linux64/bin/nvim +VimwikiDiaryIndex || exit 2
+cd "${OLDPWD}" || exit 1
+

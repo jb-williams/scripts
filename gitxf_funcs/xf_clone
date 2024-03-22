@@ -1,0 +1,19 @@
+xf_clone() {
+	REPONAME="$(/usr/bin/echo \""${RURL}"\" | awk -F"/" '{print $NF}' | cut -d "." -f 1)"
+	if [ -z "${RURL}" ]; then
+		printf "\n\tusage: ghclone <cloneurl>\n" && return 2
+	fi
+	if [ -z "${REPONAME}" ]; then
+		printf "\n\tunable to get data: \"%s\"\n" "${REPONAME}" && return 2
+	fi
+	if [ -d "${REPOS_DIR}/${REPONAME}" ]; then
+		printf "\n\tRepo \"%s\" already exists in \"%s\"\n" "${REPONAME}" "${REPOS_DIR}" && return 1
+	fi
+	printf "gitpath: %s\nrepourl: %s\nreponame: %s\n" "${REPOS_DIR}" "${RURL}" "{$REPONAME}"
+#pushd "$MYGITPATH" || return 1
+	cd "${REPOS_DIR}" || return 2
+	git clone "${RURL}" || return 1
+#popd || exit 1
+	cd "${OLDPWD}" || return 2
+	return 0
+}

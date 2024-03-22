@@ -1,0 +1,8 @@
+xf_pull() {
+	#cd ${REPOS_DIR} || return 2
+	cd "${RPATH}" || return 2
+	/usr/bin/git pull --rebase || return 1
+	printf"\n%s\n" "Changes Pulled/Rebased."
+	cd "${REPOS_DIR}" || return 2
+	return 0
+}

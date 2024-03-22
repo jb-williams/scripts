@@ -1,0 +1,41 @@
+#!/bin/bash
+#/bin/zsh
+#/usr/bin/ksh93
+################################################################
+#### 
+#### This script will run in KornShell93, Zshell, or Bash, all you need to do 
+#### is put the desired "shebang" line at the top of the script.
+#### 
+################################################################
+REQUIREMENTS=("fzf")
+for SINGLE in "${REQUIREMENTS[@]}"; do
+	if ! command -v "$SINGLE" &>/dev/null; then
+		printf "\n\t%s not found\n" "$SINGLE"
+	# do you want to install?
+		read -p "Would you like to install?: " -n 1 -r
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			if [[ -d "/etc/apt" ]]; then
+				sudo apt install "$SINGLE" || exit 1
+			elif [[ -d "/etc/pacman.d" ]]; then
+				sudp pacman -S "$SINGLE" || exit 1
+			else
+				printf "\n\t\tpackage not found\n\tuse your pkg manager to install %s\n" "$SINGLE" && exit 1
+			fi
+		else
+			printf "exiting program" && exit 0
+		fi
+	fi
+done
+
+#for file in ${HOME}/functions/gitxf/*; do
+	#source $file
+#done
+#export -f "${HOME}"/functions/gitxf_funcs/xf_action
+source "${HOME}"/functions/gitxf_funcs/xf_action
+#export FPATH=${HOME}/functions/gitxf
+
+xf_action "${@}"
+
+exit "${?}"
+
+

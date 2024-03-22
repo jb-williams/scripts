@@ -1,0 +1,61 @@
+#!/bin/bash
+# set -eou pipefail
+# is_tmux="$(/usr/bin/pidof /usr/bin/tmux &>/dev/null)"
+# is_master="$(/usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null)"
+# is_scratch="$(/usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null)"
+# is_attached="$(/usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null)"
+
+
+if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
+# if ! "${is_tmux}"; then
+    /usr/bin/tmux new -s scratch -d \; new -A -s master \; list-sessions || exit 1
+    exit 0
+#     1 1 1
+elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif ! "${is_master}" && ! "${is_scratch}" && ! "${is_attached}"; then
+    /usr/bin/tmux new -s scratch -d \; new -A -s master \; list-sessions || exit 1
+    exit 0
+#     1 0 1
+elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif ! "${is_master}" && "${is_scratch}" && ! "${is_attached}"; then
+    /usr/bin/tmux new -A -s master \; list-sessions || exit 1
+    exit 0
+#     1 1 0
+elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif ! "${is_master}" && ! "${is_scratch}" && "${is_attached}"; then
+    /usr/bin/tmux new -s scratch -d \; new -A -s master \; list-sessions || exit 1
+    exit 0
+#     1 0 0
+elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif ! "${is_master}" && "${is_scratch}" && "${is_attached}"; then
+    /usr/bin/tmux new -s master -d || exit 1
+    exit 0
+#     0 1 1
+elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif "${is_master}" && ! "${is_scratch}" && ! "${is_attached}"; then
+    /usr/bin/tmux new -s scratch -d \; attach -t master \; list-sessions || exit 1
+    exit 0
+#     0 1 0
+elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif "${is_master}" && ! "${is_scratch}" && "${is_attached}"; then
+    /usr/bin/tmux new -s scratch -d || exit 1
+    exit 0
+#     0 0 1
+elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif "${is_master}" && "${is_scratch}" && ! "${is_attached}"; then
+    /usr/bin/tmux attach -t master \; choose-tree || exit 1
+    exit 0
+#     0 0 0
+elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
+# elif "${is_master}" && "${is_scratch}" && "${is_attached}"; then
+    read -r -p "New sesh(name): " newSession
+    if [ -z "$newSession" ]; then
+        /usr/bin/tmux choose-tree || exit 1
+        exit 0
+    else
+        /usr/bin/tmux new -s "$newSession" -d \; switch-client -t "$newSession" \; list-sessions || exit 1
+        /usr/bin/tmux new -s "$newSession" -d \; switch-session -t "$newSession" \; list-sessions || exit 1
+        exit 0
+    fi
+fi
+exit 0

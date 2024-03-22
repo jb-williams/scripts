@@ -1,0 +1,24 @@
+#!/bin/sh
+# set -eou pipefail
+MYGITPATH="${HOME}/Gits"
+REPOURL="$1"
+REPONAME="$(/usr/bin/echo \""$REPOURL"\" | awk -F"/" '{print $NF}' | cut -d "." -f 1)"
+if [ ! -d "$MYGITPATH" ]; then
+	mkdir -p "$MYGITPATH"
+fi
+if [ -z "$REPOURL" ]; then
+    printf "\n\tusage: ghclone <cloneurl>\n" && exit 1
+fi
+if [ -z "$REPONAME" ]; then
+	printf "\n\tunable to get data: \"%s\"\n" "$REPONAME" && exit 1
+fi
+if [ -d "$MYGITPATH/$REPONAME" ]; then
+	printf "\n\tRepo \"%s\" already exists in \"%s\"\n" "$REPONAME" "$MYGITPATH" && exit 1
+fi
+printf "gitpath: %s\nrepourl: %s\nreponame: %s\n" "$MYGITPATH" "$REPOURL" "$REPONAME"
+# pushd "$MYGITPATH" || exit 1
+cd "$MYGITPATH" || exit 1
+git clone "$REPOURL" || exit 1
+# popd || exit 1
+cd "$OLDPWD" || exit 1
+exit 0

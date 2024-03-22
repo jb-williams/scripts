@@ -1,0 +1,60 @@
+#!/bin/bash
+# check if fzf and apropos are installed, install if not
+set -eou pipefail
+REQUIREMENTS=("fzf" "apropos")
+
+for SINGLE in "${REQUIREMENTS[@]}"; do
+	if ! command -v "$SINGLE" &>/dev/null; then
+		printf "\n\t%s not found\n" "$SINGLE"
+# 	    do you want to install?
+		read -p "Would you like to install?: " -n 1 -r
+		if [ "$REPLY" =~ ^[Yy]$ ]; then
+# 			if command -v apt &>/dev/null; then
+			if [ -d "/etc/apt" ]; then
+				sudo apt install "$SINGLE" || exit 1
+# 			elif command -v packman &>/dev/null; then
+			elif [ -d "/etc/pacman.d" ]; then
+				sudp pacman -S "$SINGLE" || exit 1
+			else
+				printf "\n\t\tpackage not found\n\tuse your pkg manager to install %s\n" "$SINGLE" && exit 1
+			fi
+		else
+			printf "exiting program" && exit 0
+		fi
+	fi
+done
+
+# get command or keyword/phrase
+read -r -p "manpages: " QUERY
+[ "$QUERY" ] || exit 1
+
+# check if command is a builtin
+if [ "$(type -ta "$QUERY" | head -1)" == "builtin" ] && [ "$QUERY" != "test" ]; then
+	tmux neww bash -c "man $(echo "$SHELL" | awk -F'/' '{print $NF}') | \less '+/$QUERY\ \['" || exit 1
+
+# check if there is manpage
+elif [ "$(apropos "$QUERY" &>/dev/null;printf '%s' "$?")" == "0" ] ; then
+	if [ "$QUERY" == "test" ]; then
+		tmux neww bash -c "man $QUERY" || exit 1
+		exit 0
+	else
+		SELECTED="$(apropos "$QUERY" | sort -u | fzf --border --margin=5% --color=dark --height=100% --reverse)"
+		[ "$SELECTED" ] || exit 1
+# 		select and open manpage
+		if [ -n "$SELECTED" ]; then
+			tmux neww bash -c "man $(echo -e  "$SELECTED" | tr -d ' ' | awk -F'(' '{print $1"."$2}' | cut -d ')' -f 1)" || exit 1
+			exit 0
+		fi
+	fi
+
+# check if there is not a manpage
+elif [ "$(apropos "$QUERY" &>/dev/null;printf '%s' "$?")" == "16" ]; then
+	exit 16
+# 	printf "%s" "Unable to find man with keyword/phrase or builtin command to lookup." && exit 16
+
+else
+# 	printf "%s" "Unable to complete request for some reason" && exit 1
+	exit 1
+fi
+exit 0
+

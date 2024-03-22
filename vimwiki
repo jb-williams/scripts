@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd "${WIKIDIR}" || exit 1
+/opt/nvim-linux64/bin/nvim +VimwikiIndex || exit 2
+cd "${OLDPWD}" || exit 1

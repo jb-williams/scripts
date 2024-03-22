@@ -1,0 +1,13 @@
+#!/bin/sh
+# this is specifically for integration with vim
+# using the "!" in normal mode and will take any given line and add a comment
+# line.
+# example:
+# !! will put in command mode with :.!
+# then if you  :.!cmt  will add # at the beginning of the line, if you
+# :.!cmt // will add // at the beginning of the line
+# !} will be :.,#!cmt and this will comment the rest of the code block
+# default comment is # , can change comment sign with cmt //  for goloang
+while IFS= read -r line; do 
+	echo "${1:-#} $line"
+done

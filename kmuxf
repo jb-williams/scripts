@@ -1,0 +1,3 @@
+#!/bin/sh
+/usr/bin/tmux kill-server && exit 0
+

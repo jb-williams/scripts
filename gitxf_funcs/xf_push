@@ -1,0 +1,45 @@
+xf_push() {
+	cd "${RPATH}" || return 2
+	/usr/bin/git status -uall -s | sort -u || return 1
+	UNTRACKEDFILES="$(/usr/bin/git status -uall -s | sort -u | /usr/bin/fzf -m --prompt="Add Files : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" GPUSH ")" 
+
+	if [[ "$UNTRACKEDFILES" ]]; then
+		for FILE in $(printf '%s' "$UNTRACKEDFILES" | awk '{print $NF}'); do
+			git add "$FILE" || return 1
+		done
+
+		read -p "Would you like to Commit?(Y/n): " -n 1 -r
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			printf "\n"
+			read -p "Use Default Commit Message?(Y/n): " -n 1 -r
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				git commit -m "${MSG}" || return 1
+				printf "\n"
+			else
+				read -p "Add Commit Message: " -r MSG
+				[[ -n "${MSG}" ]] || return 2
+				(( ${#MSG} > 3)) || return 2
+				git commit -m "${MSG}" || return 1
+				printf "\n"
+			fi
+			read -p "Would you like to Push?(Y/n): " -n 1 -r
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				git push || return 1
+				printf "\nPush Complete!\nExiting Program\n" && return 0
+			else
+				printf "\nNot Pushing Commit.\nWill need to push Manually Now.\nExiting Program\n" && return 0
+			fi
+		else
+			cd "${OLDPWD}" || return 2
+			printf "\nNeed to enter Y or y to add commit message and commit.\n"
+			printf "\nExiting Program\n" && return 0
+		fi
+	else
+		cd "${OLDPWD}" || return 2
+		printf "\nNo Files Found!\n"
+		printf "\nExiting Program\n" && return 0
+		
+	fi
+	return 0
+}
+

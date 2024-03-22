@@ -1,0 +1,7 @@
+xf_check() {
+	cd "${RPATH}" || return 2
+    /usr/bin/git remote update && git status -uno || return 1
+	cd "${REPOS_DIR}" || return 2
+	return 0
+}
+

@@ -1,0 +1,36 @@
+#!/bin/bash
+# set -eou pipefail
+clear
+# pushd "$HOME"/.config/vimwiki || exit 1
+cd "$HOME"/.config/vimwiki || exit 1
+while true; do
+	FIND_FILES="$(/usr/bin/grep -HRniEI "$*" ./docs/computer/linux | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u)"
+	if [ -z "$FIND_FILES" ]; then 
+		printf "no match found" && exit 1
+	fi 
+	SELECTION="$(printf '%s' "$FIND_FILES" | /usr/bin/fzf -m --header-first --header='linWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
+            echo;
+            exa -a --color=always "${file_pre}";
+            bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+    if [ -f "$SELECTION" ]; then
+        for FILE in "$SELECTION"; do
+            if [ "$FILE" == *.txt ] || [ "$FILE" == *.sh ] || [ "$FILE" == *.md ] || [ "$FILE" == *.lua ] || [ "$FILE" == *.conf ] || [ "$FILE" == .*rc ] || [ "$FILE" == *rc ] || [ "$FILE" == autostart ] || [ "$FILE" == *.log ] || [ "$FILE" == *.go ] || [ "$FILE" == *.mod ]; then
+                /usr/bin/nvim "$SELECTION" ||  exit 1
+# 				/usr/bin/nvim +VimwikiIndex +VimwikiGoto "$SELECTION"
+            elif [ "$FILE" == *.docx ] || [ "$FILE" == *.odt ]; then
+                /usr/bin/libreoffice "$SELECTION" || exit 1
+            elif [ "$FILE" == *.jpg ] || [ "$FILE" == *.png ]; then
+                /usr/bin/sxiv "$SELECTION" || exit 1
+            elif [ "$FILE" == *.xcf ]; then
+                /usr/bin/gimp "$SELECTION" || exit 1
+            else
+                /usr/bin/nvim "$SELECTION" || exit 1
+# 				/usr/bin/nvim +VimwikiIndex +VimwikiGoto "$selection"
+            fi
+        done
+    fi
+done
+# popd || exit 1
+cd "$OLDPWD" || exit 1
+exit 0
+

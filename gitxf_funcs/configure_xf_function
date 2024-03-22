@@ -1,0 +1,25 @@
+configure_xf_function() {
+	if [[ -z "${RCONF}" ]]; then
+		CFILE="${HOME}"/.config/gitxf.conf
+	else
+		CFILE="${RCONF}"
+	fi
+	(( VERBOSE == TRUE )) && ${CMD_ECHO} "# Configuration File: ${CFILE}"
+	if [[ -f "${CFILE}" ]]; then
+		(( VERBOSE == TRUE )) && cat "${CFILE}"
+		source "${CFILE}" || return 1
+	else
+		cat << EOF > "${HOME}"/.config/gitxf.conf
+CFILE=${HOME}/.config/gitxf.conf
+REPOS_DIR=${HOME}/Gits
+MSG=updates
+VERSION=0.1
+USER=${USER}
+EOF
+		(( VERBOSE == TRUE )) && ${CMD_ECHO} "# Configuration File: ${CFILE}"
+		(( VERBOSE == TRUE )) && cat "${CFILE}"
+		source "${CFILE}" || return 1
+	fi
+	return 0
+}  
+

@@ -1,0 +1,127 @@
+xf_action() {
+	if [[ "_${SHCODE}" == "_korn"   ]] || [[ "_${SHCODE}" == "_zshell" ]]; then
+	#typeset VERSION="0.1"
+		typeset TRUE="1"
+		typeset FALSE="0"
+		typeset VERBOSE="${FALSE}"
+		typeset VERYVERB="${FALSE}"
+		typeset CMD_ECHO="${GBL_ECHO:-echo -e }"
+	elif [[ "_${SHCODE}" == "_bash" ]]; then
+		#declare VERSION="0.1"
+		declare TRUE="1"
+		declare FALSE="0"
+		declare VERBOSE="${FALSE}"
+		declare VERYVERB="${FALSE}"
+		declare CMD_ECHO="${GBL_ECHO:-echo -e }"
+	else
+		#VERSION="0.1"
+		TRUE="1"
+		FALSE="0"
+		VERBOSE="${FALSE}"
+		VERYVERB="${FALSE}"
+		CMD_ECHO="${GBL_ECHO:-echo -e }"
+	fi
+
+	#### Set up a trap of the HUP signal to cause this script
+	#### to dynamically configure or reconfigure itself upon
+	#### receipt of the HUP signal.
+	trap "configure_xf_function '${0}'" HUP
+
+	source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/configure_xf_function
+
+	#### Read the configuration file and initialize variables by
+	#### sending this script a HUP signal
+   	kill -HUP ${$}
+
+	#source "${HOME}"/functions/gitxf_funcs/usagemsg_xf_function
+#### Process the command line options and arguments.
+	while getopts ":vVipcr:u:m:" OPTION
+	do
+		case "${OPTION}" in
+			'i') GPUSH="${TRUE}";;
+			'p') GPULL="${TRUE}";;
+			'c') GCHECK="${TRUE}";;
+			'u') RURL="${OPTARG}"; URLTRU="${TRUE}";;
+			'r') RPATH="${OPTARG}";;
+			'f') RPATH="${OPTARG}";;
+			'm') MSG="${OPTARG}";;
+			'v') VERBOSE="${TRUE}";;
+			'V') VERYVERB="${TRUE}";;
+			'?') source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
+			'h') source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
+			':') source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
+		esac
+	done
+
+	shift $(( $OPTIND - 1 ))
+	#shift $(( ${OPTIND} - 1 )) # shellcheck said this was unnecessary arithmetic expansion
+
+	trap "usagemsg_xf_function '${0}' ${VERSION}" EXIT
+
+#### Place any command line option error checking statements
+#### here.  If an error is detected, print a message to
+#### standard error, and return from this function with a
+#### non-zero return code.  The "trap" statement will cause
+#### the "usagemsg" to be displayed.
+	
+	case "${TRUE}" in
+	"${GPUSH}")
+		GXF_PUSH="${TRUE}"
+	;;
+	"${GPULL}")
+		GXF_PULL="${TRUE}"
+	;;
+	"${GCHECK}")
+		GXF_CHECK="${TRUE}"
+	;;
+	"${RURL} && "${URLTRU}")
+		GXF_RURL="${TRUE}"
+	;;
+	*)
+		source "${HOME}"/functions/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1
+	;;
+	esac
+		
+	## want to check if it is relative or absolute path sometime
+	if [[ -z "${RPATH}" ]]; then
+		RPATH="${PWD}"
+	fi
+	[[ -d ${RPATH} ]] || return 2
+	(( ${#MSG} < 3 )) && return 1
+
+	trap "-" EXIT
+
+	(( VERYVERB == TRUE )) && set -x
+	(( VERBOSE  == TRUE )) && ${CMD_ECHO} "# Version........: ${VERSION}"
+
+################################################################
+####
+#### Your shell function should perform it's specfic work here.
+#### All work performed by your shell function should be coded
+#### within this section of the function.  This does not mean that
+#### your function should be called from here, it means the shell
+#### code that performs the work of your function should be 
+#### incorporated into the body of this function.  This should
+#### become your function.
+#### 
+	(( VERBOSE == TRUE )) && ${CMD_ECHO} "# Content of Repo Path: ${RPATH}"
+	(( VERBOSE == TRUE && GXF_PUSH == TRUE )) && ${CMD_ECHO} "# Pushing Content of Repo: ${RPATH}"
+	(( VERBOSE == TRUE && GXF_PULL == TRUE )) && ${CMD_ECHO} "# Pulling Content of Repo: ${RPATH}"
+	(( VERBOSE == TRUE && GXF_CHECK == TRUE )) && ${CMD_ECHO} "# Checking Content of Repo: ${RPATH}"
+	(( GXF_PUSH == TRUE )) && source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_push && xf_push
+	(( GXF_PULL == TRUE )) && source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_pull && xf_pull
+	(( GXF_CHECK == TRUE )) && source  "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_check && xf_check
+	(( GXF_RURL == TRUE )) && source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_clone && xf_clone
+
+	#${CMD_ECHO} "# MSG = ${MSG}"
+
+	#### If you need to define array values inside a while or until loop, and you
+	#### read input from a file, redirect input into the while loop instead of
+	#### using a pipe. Bash requires this syntax if you need the array values to
+	#### be visible outside of the loop.
+
+	trap "-" HUP
+
+	return 0
+}
+

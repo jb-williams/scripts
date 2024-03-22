@@ -1,0 +1,2 @@
+#!/bin/bash
+VIMENV=prev /opt/nvim-linux64/bin/nvim -p "${@}"

@@ -1,0 +1,63 @@
+#!/bin/bash
+# USE -- ctrl+j and ctrl+k down/up respectively for file names
+# USE shift+tab to select multiple items
+# (not implemented properly yet) # if preview of file is there use -- alt+j and alt+k down/up respectively for the preview of file contents
+set -o pipefail
+REQUIREMENTS=("fzf")
+for SINGLE in "${REQUIREMENTS[@]}"; do
+	if ! command -v "$SINGLE" &>/dev/null; then
+		printf "\n\t%s not found\n" "$SINGLE"
+	# do you want to install?
+		read -p "Would you like to install?: " -n 1 -r
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			if [[ -d "/etc/apt" ]]; then
+				sudo apt install "$SINGLE" || exit 1
+			elif [[ -d "/etc/pacman.d" ]]; then
+				sudp pacman -S "$SINGLE" || exit 1
+			else
+				printf "\n\t\tpackage not found\n\tuse your pkg manager to install %s\n" "$SINGLE" && exit 1
+			fi
+		else
+			printf "exiting program" && exit 0
+		fi
+	fi
+done
+if [[ "$1" = "\*" ]]; then
+	git add .
+	read -p "Add commit message: " -r MESSAGE
+	[[ "$MESSAGE" ]] || exit 1
+	git commit -m "$MESSAGE"
+	git push
+	exit 0
+else
+	/usr/bin/git status -uall -s | sort -u || exit 1
+	UNTRACKEDFILES="$(/usr/bin/git status -uall -s | sort -u | /usr/bin/fzf -m --prompt="Add Files : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" GPUSH ")" 
+
+	if [[ "$UNTRACKEDFILES" ]]; then
+		for FILE in $(printf '%s' "$UNTRACKEDFILES" | awk '{print $NF}'); do
+			git add "$FILE"
+		done
+
+		read -p "Would you like to Commit?(Y/n): " -n 1 -r
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			printf "\n"
+			read -p "Add commit MESSAGE: " -r MESSAGE
+			[[ -n "$MESSAGE" ]] || exit 1
+			git commit -m "$MESSAGE"
+			printf "\n"
+			read -p "Would you like to Push?(Y/n): " -n 1 -r
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				git push || exit 1
+				printf "\nExiting Program\n" && exit 0
+			else
+				printf "\nExiting Program\n" && exit 0
+			fi
+		else
+			printf "\nNeed to enter Y/n\n"
+			printf "\nExiting Program\n" && exit 0
+		fi
+		exit 0
+	else
+		exit 1
+	fi
+fi

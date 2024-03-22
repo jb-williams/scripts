@@ -1,0 +1,34 @@
+usagemsg_xf_function() {
+  CMD_ECHO="${GBL_ECHO:-echo -e }"
+  [[ "_${SHCODE}" == "_korn" ]] && typeset CMD_ECHO="${GBL_ECHO:-echo -e }"
+  [[ "_${SHCODE}" == "_bash" ]] && declare CMD_ECHO="${GBL_ECHO:-echo -e }"
+  ${CMD_ECHO} ""
+  ${CMD_ECHO} "${1:+Program: ${1}}${2:+        Version: ${2}}"
+
+  ${CMD_ECHO} "
+This function/program pushes/pulls/checks git repos if given the path to the repo or are currently in a repo.
+You should only use one of the [ipc] options at a time.
+
+Usage: ${1##*/} [-?hvV] {-ipc[u url]} [-r path/to/repo] [-f path/to/config-file] [-m message-for-commit] 
+
+  Where:
+    -i = insert/push -- this will add/commit/push all changed files
+    -p = pull -- will pull newest version/commits from the remote repo(DEFAULTS TO $PWD)
+    -c = check -- will check to see if you are behind in version/commits(DEFAULTS TO $PWD)
+	-u = clone url -- designates a repo to clone through it's url(DEFAULTS $HOME/Gits)
+    -r = path to repo -- designates the path to the git repo(DEFAULTS $PWD)
+    -f = path to config file -- designates the path to the config file(DEFAULTS $HOME/.confi/gitxf.conf)
+    -m = message -- commit message(DEFAULTS to \"updates\", only tested-hypens-not-spaces)
+                   (must be >= 3 characters long)
+    -v = Verbose mode -- displays your_function function info
+    -V = Very Verbose Mode -- debug output displayed
+    -h = Help -- display this message
+    -? = Help -- display this message
+
+Author: Jb Williams (jb.williams016@gmail.com)
+
+\"AutoContent\" enabled
+\"Multi-Shell\" enabled
+"
+}
+
