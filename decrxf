@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Simple encrypt program
+
+my_selection="$(exa -a | fzf --height 95% --reverse --info hidden --prompt "ENCRYPT FILE: "  --header-first --preview ' cd_pre="$(echo $(pwd)/$(echo {}))";
+                    echo $cd_pre;
+                    echo;
+                    exa -a --color=always "${cd_pre}";
+                    termpix --width 100 --true-color {} 2>/dev/null;
+                    bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:65%)"
+
+if [[ "${my_selection}" ]]
+then
+    printf "Output File: \n"
+    read -r output_file
+    if [[ "${output_file}" ]]
+    then
+        printf "Decrypting %s.\n" "${my_selection}"
+        gpg --output "${output_file}" --decrypt "${my_selection}"
+        read -p "Would you like to Delete Original Encrypted File?:(Y/n) " -n 1 -r
+        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+                rm -i "${my_selection}"
+            elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+                printf "\nNot Deleting Original Encrypted File\n"
+            fi
+    else
+        printf "Error either in my_selection, or Output File!\n"
+        exit 1
+    fi
+else
+    printf "No my_selection input!\n"
+    exit 2
+fi
+sleep 1
+exit 0
