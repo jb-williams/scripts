@@ -38,7 +38,6 @@ Usage: %s [-?hvV]
     -h = Help    -- display this message
     -? = Help    -- display this message
 
-# Author: Jb Williams (jb.williams016@gmail.com)
 " "" "${1:+Program: ${1}}" "" "" "${2}" "${1##*/}"
 }
 
