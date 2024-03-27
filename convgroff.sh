@@ -1,5 +1,4 @@
 #!/bin/sh
+# convert groff ms format to pdf
 #set -eou pipefail
-
-groff -ms -T pdf -tle "$1" > "$2"
-# groff -ms -T html -tle $1 > $2
+groff -ms -T pdf -tle "${1}" > "${2}"

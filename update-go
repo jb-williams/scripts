@@ -13,25 +13,24 @@ VERSION="0.1"
 VERBOSE="FALSE"
 CHK_VERS="FALSE"
 # Get Golang Version and the Given Golang Hash for linux
-GO_DLPAGE="$(/usr/bin/curl https://go.dev/dl/ | /usr/bin/grep -iE 'href="/dl/go[0-9].[0-9]{2}.[0-9]{1,2}.linux-amd64.tar.gz"' -m 2 -A 6 | tail -7 | sed -e 's/<[^>]*.//g' | tr '\n' ' ')"
-GO_VERSION="$(printf "%s" "${GO_DLPAGE}" | awk '{print $1}')"
-DL_HASH="$(printf "%s" "${GO_DLPAGE}" | awk '{print $6}')"
-LOCAL_GO="$(go version 2>/dev/null)"
-
+go_DLpage="$(/usr/bin/curl https://go.dev/dl/ | /usr/bin/grep -iE 'href="/dl/go[0-9].[0-9]{2}.[0-9]{1,2}.linux-amd64.tar.gz"' -m 2 -A 6 | tail -7 | sed -e 's/<[^>]*.//g' | tr '\n' ' ')"
+go_version="$(printf "%s" "${go_DLpage}" | awk '{print $1}')"
+dl_hash="$(printf "%s" "${go_DLpage}" | awk '{print $6}')"
+local_go="$(go version 2>/dev/null)"
 
 usageMessage () {
-    CMD_ECHO="${GBL_ECHO:-echo -e }"
-    $CMD_ECHO ""
-    $CMD_ECHO "${1:+Program: ${1}}${2:+        }"
-    $CMD_ECHO ""
-    $CMD_ECHO "\tVersion: ${VERSION}"
-    $CMD_ECHO "
+    printf "
+%s
+%s%s
+%s
+\tVersion: %s
+
 This program checks if the local Golang Version is behind, if so, download new
 version to \$TEMP, check if the hash of the tar.gz is the same as the hash given on the
 website. If the hashes match extract the tar.gz and move the files to /usr/local/
 then delete tar.gz in \$TEMP.
 
-Usage: ${1##*/} [-?hvV]
+Usage: %s [-?hvV]
 
   Where:
     -v = Version -- just the version is displayed
@@ -39,22 +38,22 @@ Usage: ${1##*/} [-?hvV]
     -h = Help    -- display this message
     -? = Help    -- display this message
 
-Author: Jb Williams (jb.williams016@gmail.com)
-"
+# Author: Jb Williams (jb.williams016@gmail.com)
+" "" "${1:+Program: ${1}}" "" "" "${2}" "${1##*/}"
 }
 
 install_Golang () {
-    printf "%s %s %s" "Curl read the current version as" "${GO_VERSION}" " : Would you like to Continue?(Y/n): "
-    read -r REPLY
-    if [ "$REPLY" = "Y" ] || [ "$REPLY" = "y" ]; then
+    printf "%s %s %s" "Curl read the current version as" "${go_version}" " : Would you like to Continue?(Y/n): "
+    read -r reply
+    if [ "${reply}" = "Y" ] || [ "${reply}" = "y" ]; then
         # Download to  $TEMP dir
         cd "${TEMP}" || exit 1
-        /usr/bin/wget "https://go.dev/dl/${GO_VERSION}" || exit 1
+        /usr/bin/wget "https://go.dev/dl/${go_version}" || exit 1
 
         # get sha256 of the file you are wanting to verify
-        if [ -n "${GO_VERSION}" ] && [ -f "${GO_VERSION}" ] && [ ! -d "${GO_VERSION}" ]; then
-            TAR_HASH="$(shasum -a256 "$GO_VERSION" | awk '{print $1}')"
-            [ -n "${TAR_HASH}" ] || exit 1
+        if [ -n "${go_version}" ] && [ -f "${go_version}" ] && [ ! -d "${go_version}" ]; then
+            tar_hash="$(shasum -a256 "${go_version}" | awk '{print $1}')"
+            [ -n "${tar_hash}" ] || exit 1
         else
             printf "%s\n" "Unable to find the '.tar.gz', may have been an error downloading!"
             cd "${OLDPWD}" || exit 1
@@ -62,22 +61,22 @@ install_Golang () {
         fi
 
         # Check if the Golang .tar.gz's hash matches the given hash from the download page
-        if [ "${DL_HASH}" = "${TAR_HASH}" ]; then
+        if [ "${dl_hash}" = "${tar_hash}" ]; then
             # Decompress and move to proper place removing the older version if it exists
             printf "%s!\n" "Hashes Match"
-            /usr/bin/tar xfz "${GO_VERSION}" || exit 1
+            /usr/bin/tar xfz "${go_version}" || exit 1
             if [ -d /usr/local/go ]; then
                 /usr/bin/sudo rm -rf /usr/local/go || exit 1
                 /usr/bin/sudo mv go /usr/local/ || exit 1
-                /usr/bin/rm "${GO_VERSION}" || exit 1
+                /usr/bin/rm "${go_version}" || exit 1
             else
                 /usr/bin/sudo mv go /usr/local/ || exit 1
-                /usr/bin/rm "${GO_VERSION}" || exit 1
+                /usr/bin/rm "${go_version}" || exit 1
             fi
         else
             # Abort if the .tar.gz's hash doesn't match the given hash from the download page
             printf "%s!!!!\n" "HASHES DON'T MATCH!!! ABORTING!!"
-            rm "${GO_VERSION}" || exit 1
+            rm "${go_version}" || exit 1
         fi
         cd "${OLDPWD}" || exit 1
     else
@@ -90,22 +89,22 @@ while getopts "vVh?" OPTION; do
     case "$OPTION" in
         v) CHK_VERS="TRUE" ;;
         V) VERBOSE="TRUE" ;;
-        \?|h) usageMessage "$0" && exit 1 ;;
+        \?|h) usageMessage "${0}" "${VERSION}" && exit 1 ;;
     esac
 done
 
 shift $((OPTIND - 1))
 
 [ "$VERBOSE" = "TRUE" ] && set -x
-[ "$CHK_VERS" = "TRUE" ] && echo "# ${0}"
-[ "$CHK_VERS" = "TRUE" ] && echo "# Version........: ${VERSION}" && exit 0
+[ "$CHK_VERS" = "TRUE" ] && printf "#\n#\t%s\n" "${0##*/}"
+[ "$CHK_VERS" = "TRUE" ] && printf "%s\n" "# Version........: ${VERSION}" && exit 0
 
 # Prompt User, asking if they want to continue
-if [ -z "${LOCAL_GO}" ]; then
+if [ -z "${local_go}" ]; then
     printf "%s!\n" "Golang not Installed yet"
     install_Golang || exit 0
 else
-    printf "%s!\n" "Your version of golang is ${LOCAL_GO}"
+    printf "%s!\n" "Your version of golang is ${local_go}"
     install_Golang || exit 0
 fi
 

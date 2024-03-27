@@ -1,6 +1,7 @@
 #!/bin/sh
+# main script for my tmp clip_file
 # set -eou pipefail
-clear
+# clear
 normal="\e[0m"
 bold="\e[1m"
 green="\e[32m"
@@ -14,33 +15,29 @@ if [ ! -d "${TEMPDIR}" ] || [ -z "${TEMPDIR}" ]; then
 else
 	exit 1
 fi
-CLIPFILE="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
+clip_file="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
 
-# if clipfile exists, create view of clipfile and put selected text from clipfile to clipboard
-if [ -f "${CLIPFILE}" ]; then
-    CLPMAN="$(/bin/cat -p "$CLIPFILE" | uniq | /bin/fzf -m --prompt="Copy : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" CLIPXF ")"
-#     CLPMAN="$("$HOME"/.cargo/bin/bat -p "$CLIPFILE" | uniq | /bin/fzf -m --prompt="Copy : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" CLIPXF ")"
-    if [ "${CLPMAN}" ]; then
-        printf "%s\n" "$CLPMAN" | /bin/xclip -sel c || exit 1
+# if clip_file exists, create view of clipfile and put selected text from clipfile to clipboard
+if [ -f "${clip_file}" ]; then
+    clp_man="$(/bin/cat -p "${clip_file}" | uniq | /bin/fzf -m --prompt="Copy : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" CLIPXF ")"
+#     clp_man="$("$HOME"/.cargo/bin/bat -p "$clip_file" | uniq | /bin/fzf -m --prompt="Copy : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" CLIPXF ")"
+    if [ "${clp_man}" ]; then
+        printf "%s\n" "${clp_man}" | /bin/xclip -sel c || exit 1
     else
         exit 1
     fi
 
-# if clipfile doesn't exist, create it, copy clipboard into clipfile, then create view of clipfile and, if desired, copy some text from clipfile back to clipboard
+# if clip_file doesn't exist, create it, copy clipboard into clipfile, then create view of clipfile and, if desired, copy some text from clipfile back to clipboard
 else
-#	/bin/touch "$clipfile" \
-#		&& /bin/chmod 600 "$clipfile" \
-#		&& /bin/echo -e "$CLPMAN" | /bin/xclip -sel c \
-#		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!\n" "$clipfile"
-    /bin/touch "$CLIPFILE" \
-		&& /bin/chmod 600 "$CLIPFILE" \
-		&& printf "%s\n" "$(/bin/xclip -sel c -o)" >> "$CLIPFILE" \
-		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!\n" "$CLIPFILE"
+    /bin/touch "${clip_file}" \
+		&& /bin/chmod 600 "${clip_file}" \
+		&& printf "%s\n" "$(/bin/xclip -sel c -o)" >> "${clip_file}" \
+		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!\n" "${clip_file}"
 
-    CLPMAN="$("$HOME"/.cargo/bin/bat "$CLIPFILE" | uniq | /bin/fzf --prompt="Copy : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" CLIPXF ")"
-    if [[ "$CLPMAN" ]]; then
-  		/bin/echo -e "$CLPMAN" 
-        printf "%s\n" "$CLPMAN" | /bin/xclip -sel c
+    clp_man="$("${HOME}"/.cargo/bin/bat "${clip_file}" | uniq | /bin/fzf --prompt="Copy : " --border --margin=5% --color=dark --height=100% --reverse --header-first --header=" CLIPXF ")"
+    if [ "${clp_man}" ]; then
+  		/bin/echo -e "${clp_man}" 
+        printf "%s\n" "${clp_man}" | /bin/xclip -sel c
     else
         exit 1
     fi

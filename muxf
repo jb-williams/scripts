@@ -1,61 +1,66 @@
-#!/bin/bash
-# set -eou pipefail
-# is_tmux="$(/usr/bin/pidof /usr/bin/tmux &>/dev/null)"
-# is_master="$(/usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null)"
-# is_scratch="$(/usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null)"
-# is_attached="$(/usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null)"
+#!/usr/bin/sh
+# starts up my beginning setup for tmux
+#set -x
+list_sessions="$(tmux list-sessions | grep -iE 'main|diary|attached' 2>/dev/null)"
+if_main="TRUE"
+if_diary="TRUE"
+if_attached="TRUE"
 
-
-if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-# if ! "${is_tmux}"; then
-    /usr/bin/tmux new -s scratch -d \; new -A -s master \; list-sessions || exit 1
-    exit 0
-#     1 1 1
-elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif ! "${is_master}" && ! "${is_scratch}" && ! "${is_attached}"; then
-    /usr/bin/tmux new -s scratch -d \; new -A -s master \; list-sessions || exit 1
-    exit 0
-#     1 0 1
-elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif ! "${is_master}" && "${is_scratch}" && ! "${is_attached}"; then
-    /usr/bin/tmux new -A -s master \; list-sessions || exit 1
-    exit 0
-#     1 1 0
-elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif ! "${is_master}" && ! "${is_scratch}" && "${is_attached}"; then
-    /usr/bin/tmux new -s scratch -d \; new -A -s master \; list-sessions || exit 1
-    exit 0
-#     1 0 0
-elif ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif ! "${is_master}" && "${is_scratch}" && "${is_attached}"; then
-    /usr/bin/tmux new -s master -d || exit 1
-    exit 0
-#     0 1 1
-elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif "${is_master}" && ! "${is_scratch}" && ! "${is_attached}"; then
-    /usr/bin/tmux new -s scratch -d \; attach -t master \; list-sessions || exit 1
-    exit 0
-#     0 1 0
-elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif "${is_master}" && ! "${is_scratch}" && "${is_attached}"; then
-    /usr/bin/tmux new -s scratch -d || exit 1
-    exit 0
-#     0 0 1
-elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && ! /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif "${is_master}" && "${is_scratch}" && ! "${is_attached}"; then
-    /usr/bin/tmux attach -t master \; choose-tree || exit 1
-    exit 0
-#     0 0 0
-elif /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'master' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'scratch' &>/dev/null && /usr/bin/tmux list-sessions | /usr/bin/grep -qi 'attached' &>/dev/null; then
-# elif "${is_master}" && "${is_scratch}" && "${is_attached}"; then
-    read -r -p "New sesh(name): " newSession
-    if [ -z "$newSession" ]; then
-        /usr/bin/tmux choose-tree || exit 1
-        exit 0
-    else
-        /usr/bin/tmux new -s "$newSession" -d \; switch-client -t "$newSession" \; list-sessions || exit 1
-        /usr/bin/tmux new -s "$newSession" -d \; switch-session -t "$newSession" \; list-sessions || exit 1
-        exit 0
-    fi
+if ! echo "${list_sessions}" | grep -q 'main'; then
+    if_main="FALSE"
 fi
-exit 0
+
+if ! echo "${list_sessions}" | grep -q 'diary'; then
+    if_diary="FALSE"
+fi
+
+if ! echo "${list_sessions}" | grep -q 'attached'; then
+    if_attached="FALSE"
+fi
+
+true_checker="$(echo "${if_main}" "${if_diary}" "${if_attached}")"
+# 1 1 1
+if [ "${true_checker}" = "FALSE FALSE FALSE" ]; then
+    /usr/bin/tmux new -s diary -E "diary" -d \; new -A -s main \; list-sessions || exit 1
+#     /usr/bin/tmux new -s diary -E "diary" -d \; new -A -s main \; choose-tree || exit 1
+#     /usr/bin/tmux send-keys -s diary "diary" ENTER || exit 1
+
+# 0 1 1
+elif [ "${true_checker}" = "TRUE FALSE FALSE" ]; then
+	/usr/bin/tmux new -s diary -E "diary" -d \; attach -t main \; list-sessions || exit 1
+# 	/usr/bin/tmux new -s diary -E "diary" -d \; attach -t main \; choose-tree || exit 1
+#     /usr/bin/tmux send-keys -t diary "diary" ENTER || exit 1
+
+# 0 0 1
+elif [ "${true_checker}" = "TRUE TRUE FALSE" ]; then
+	/usr/bin/tmux attach -t main \; choose-tree || exit 1
+
+# 1 1 0
+elif [ "${true_checker}" = "FALSE FALSE TRUE" ]; then
+    /usr/bin/tmux new -s diary -E "diary" -d \; new -A -s main \; list-sessions || exit 1
+#     /usr/bin/tmux new -s diary -E "diary" -d \; new -A -s main \; choose-tree || exit 1
+#     /usr/bin/tmux send-keys -t diary "diary" ENTER || exit 1
+
+# 1 0 1
+elif [ "${true_checker}" = "FALSE TRUE FALSE" ]; then
+	/usr/bin/tmux new -A -s main \; list-sessions || exit 1
+# 	/usr/bin/tmux new -A -s main \; choose-tree || exit 1
+
+# 0 1 0
+elif [ "${true_checker}" = "TRUE FALSE TRUE" ]; then
+	/usr/bin/tmux new -s diary -E "diary" -d \; list-sessions || exit 1
+# 	/usr/bin/tmux new -s diary -E "diary" -d \; choose-tree || exit 1
+#     /usr/bin/tmux send-keys -t diary "diary" ENTER || exit 1
+
+# 0 0 0
+elif [ "${true_checker}" = "TRUE TRUE TRUE" ]; then
+	printf "New sesh(name): "
+	read -r  new_session
+    if [ "${new_session}" = "" ] || [ -z "${new_session}" ] || [ "${new_session}" = "n" ] || [ "${new_session}" = "N" ]; then
+        /usr/bin/tmux choose-tree || exit 1
+	else
+		/usr/bin/tmux new -s "${new_session}" -d \; choose-tree || exit 1
+	fi
+else
+	exit 2
+fi

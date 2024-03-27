@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sudo netstat -tulpan || exit 1
+exit 0

@@ -1,52 +1,51 @@
 #!/bin/bash
 # hacked together way of switching between github gitlab
-# stop script if any step fails
-set -eou pipefail
-ACTION="$1"
-REPO="$2"
+my_action="${1}"
+my_repo="${2}"
 
-pushd "$REPO"
-if [ -z "$REPO" ]; then
+# pushd "$my_repo"
+cd "${my_repo}" || exit 1
+
+if [ -z "${my_repo}" ]; then
     /usr/bin/figlet "ERROR!!"
-    printf "ERROR: Please include repo name followed by filename or \* \(glob\) for entire dir.\n"
+    printf "ERROR: Please include my_repo name followed by filename or \* \(glob\) for entire dir.\n"
   exit 1
 fi
 
-if [[ "$ACTION" == "push" ]]; then
+if [[ "${my_action}" == "push" ]]; then
     /usr/bin/git status || exit 1
     read -p "Would you like to push changes?: " -n 1 -r
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
             /usr/bin/git add . || exit 1
-        elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+        elif [[ "${REPLY}" =~ ^[Nn]$ ]]; then
             printf "\n%s" "No Changes Pushed" || exit 1
             sleep 0.5
-            exit
+            exit 0
         fi
 
     printf "\n%s" "Create Comment: "
-    read -r MESSAGE
-
-        /usr/bin/git commit -m "$MESSAGE" || exit 1
-        /usr/bin/git push || exit 1
-        
+    read -r my_mesg
+	/usr/bin/git commit -m "${my_mesg}" || exit 1
+	/usr/bin/git push || exit 1
     /usr/bin/figlet "PUSH COMPLETE!!"
-    popd || exit 1
-    sleep 0.5
-    exit 0
-elif [[ "$ACTION" == "pull" ]]; then
+
+elif [[ "${my_action}" == "pull" ]]; then
     /usr/bin/git pull --rebase
     /usr/bin/figlet "PULL COMPLETE!!"
-    popd || exit 1
-    sleep 0.5
-    exit 0
-elif [[ "$ACTION" == "check" ]]; then
+
+elif [[ "${my_action}" == "check" ]]; then
     /usr/bin/git remote update && git status -uno
     exit 0
+
 else
     /usr/bin/figlet "ERROR!!"
-    printf "ERROR! Usage:  gitxf [push or pull or check] [repo_name]\n"
-    popd || exit 1
+    printf "ERROR! Usage:  gitxf [push or pull or check] [my_repo_name]\n"
+	cd "${OLDPWD}" || exit 1
     sleep 0.5
-    exit 1
+	exit 1
+
 fi
+sleep 0.5
+cd "${OLDPWD}" || exit 1
+exit 0
 

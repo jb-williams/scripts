@@ -1,36 +1,35 @@
 #!/bin/sh
+# grep though the diary entry in my wiki, can use regex
 # set -eou pipefail
-clear
-# pushd "$HOME"/.config/vimwiki/diary || exit 1
-cd "$HOME"/.config/vimwiki/diary || exit 1
+#clear
+cd "${HOME}"/.config/vimwiki/diary || exit 1
 while true; do
-	FIND_FILES="$(/usr/bin/grep -HRniEI "$*" | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u)"
-	if [ -z "$FIND_FILES" ]; then 
+	find_files="$(/usr/bin/grep -HRniEI "${*}" | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u)"
+	if [ -z "${find_files}" ]; then 
 		printf "no match found" && exit 1
 	fi 
-	SELECTION="$(printf '%s' "$FIND_FILES" | exa -r | /usr/bin/fzf -m --header-first --header='gWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
+	my_selection="$(printf '%s' "${find_files}" | exa -r | /usr/bin/fzf -m --header-first --header='gWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
             echo;
             exa -a --color=always "${file_pre}";
             bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
-    if [ -f "$SELECTION" ]
+    if [ -f "${my_selection}" ]
     then
-        for FILE in $SELECTION; 
+        for file in ${my_selection}; 
         do
-            if [ "$FILE" == *.txt ] || [ "$FILE" == *.sh ] || [ "$FILE" == *.md ] || [ "$FILE" == *.lua ] || [ "$FILE" == *.conf ] || [ "$FILE" == .*rc ] || [ "$FILE" == *rc ] || [ "$FILE" == autostart ] || [ "$FILE" == *.log ] || [ "$FILE" == *.go ] || [ "$FILE" == *.mod ]; then
-                nvim "$SELECTION" || exit 1
-            elif [ "$FILE" == *.docx ] || [ "$FILE" == *.odt ]; then
-                /usr/bin/libreoffice "$SELECTION" || exit 1
-            elif [ "$FILE" == *.jpg ] || [ "$FILE" == *.png ]; then
-                /usr/bin/sxiv "$SELECTION" || exit 1
-# 				|| printf "unable to open \"%s\" with" "$SELECTION"; exit 1
-            elif [ "$FILE" == *.xcf ]; then
-                /usr/bin/gimp "$SELECTION" || exit 1
+            if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then
+                nvim "${my_selection}" || exit 1
+            elif [ "${my_file}" == *.docx ] || [ "${my_file}" == *.odt ]; then
+                /usr/bin/libreoffice "${my_selection}" || exit 1
+            elif [ "${my_file}" == *.jpg ] || [ "${my_file}" == *.png ]; then
+                /usr/bin/sxiv "${my_selection}" || exit 1
+            elif [ "${my_file}" == *.xcf ]; then
+                /usr/bin/gimp "${my_selection}" || exit 1
             else
-                nvim "$SELECTION" || exit 1
+                nvim "${my_selection}" || exit 1
             fi
         done
     fi
 done
 # popd || exit 1
-cd "$OLDPWD" || exit 1
+cd "${OLDPWD}" || exit 1
 exit 0

@@ -1,4 +1,5 @@
 #!/bin/sh
+# makes tmp clip_file if it doesn't exist, clears it if it does
 #set -eou pipefail
 normal="\e[0m"
 bold="\e[1m"
@@ -14,20 +15,20 @@ else
 	exit 1
 fi
 
-CLIPFILE="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
+clip_file="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
 
 # check if file exists
-if [ ! -f "${CLIPFILE}" ]; then
-	printf "${green}No ${bold}${orange}Clipman${normal}${green}, ${bold}%s${normal}${green} not created yet!\n" "$CLIPFILE"
+if [ ! -f "${clip_file}" ]; then
+	printf "${green}No ${bold}${orange}Clipman${normal}${green}, ${bold}%s${normal}${green} not created yet!\n" "${clip_file}"
 
 # if file exists, check if it is empty
-elif [ -f "${CLIPFILE}" ] && [ -z "$(cat "$CLIPFILE")" ]; then
-	printf "${green}Empty ${bold}${orange}Clipman${normal}${green}, ${bold}%s${normal}${green} created but empty!\n" "$CLIPFILE"
+elif [ -f "${clip_file}" ] && [ -z "$(cat "${clip_file}")" ]; then
+	printf "${green}Empty ${bold}${orange}Clipman${normal}${green}, ${bold}%s${normal}${green} created but empty!\n" "${clip_file}"
 
 # if file exists and is not empty, clear it
-elif [ -f "${CLIPFILE}" ] && [ -n "$(cat "$CLIPFILE")" ]; then
-	printf "${green}Clearing ${bold}${orange}Clipman${normal}${green}, ${bold}%s${normal}${green} cleared!\n" "$CLIPFILE"
-    /usr/bin/echo "" | /usr/bin/xclip -sel c && /usr/bin/echo "" > "$CLIPFILE"
+elif [ -f "${clip_file}" ] && [ -n "$(cat "${clip_file}")" ]; then
+	printf "${green}Clearing ${bold}${orange}Clipman${normal}${green}, ${bold}%s${normal}${green} cleared!\n" "${clip_file}"
+    /usr/bin/echo "" | /usr/bin/xclip -sel c && /usr/bin/echo "" > "${clip_file}"
 else
 	exit 1
 fi

@@ -1,43 +1,37 @@
 #!/bin/bash
 set -eou pipefail
-clear
-#pushd "$HOME"/.config/vimwiki/docs || exit 1
-cd "$HOME"/.config/vimwiki/docs || exit 1
+#clear
+# cd to documents wiki
+cd "${HOME}"/.config/vimwiki/docs || exit 1
 while true; do
-	FIND_FILES="$(/usr/bin/grep -HRniEI "$*" ./computer ./security | /usr/bin/awk -F ':' '{print $1}' | sort -u)"
-	if [ -z "$FIND_FILES" ]; then 
+#	get all the files with the specified pattern, can us regex here
+	find_files="$(/usr/bin/grep -HRniEI "${*}" ./computer ./security | /usr/bin/awk -F ':' '{print $1}' | sort -u)"
+#	exit if no files found with matching pattern
+	if [ -z "${find_files}" ]; then 
 		printf "no match found" && exit 1
 	fi 
-	SELECTION="$(printf '%s' "$FIND_FILES" | /usr/bin/fzf -m --header-first --header='compWiki:' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
+# 	if files are found with matching pattern display them with fzf
+	my_selection="$(printf '%s' "${find_files}" | /usr/bin/fzf -m --header-first --header='compWiki:' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
             echo;
             exa -a --color=always "${file_pre}";
             bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
-    #selection="$(/usr/bin/grep -HRniEI "$*" ./computer ./security | /usr/bin/awk -F ':' '{print $1}' | uniq | /usr/bin/fzf -m --header-first --header='compWiki:' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
-            #echo;
-            #exa -a --color=always "${file_pre}";
-            #bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
-    #selection="$(/usr/bin/grep -HRniE "$*" ./computer ./security | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u | /usr/bin/fzf -m --header-first --header='compWiki:' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
-            #echo;
-            #exa -a --color=always "${file_pre}";
-            #bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
-    #selection="$(/usr/bin/grep -HRniE "$*" "$HOME"/.config/vimwiki/docs/computer "$HOME"/.config/vimwiki/docs/security | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u | /usr/bin/fzf --header-first --header='compWiki:' --height 95% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
-            #echo $file_pre;
-    if [ -f "$SELECTION" ]; then
-        for file in "$SELECTION"; do
-            if [ "$file" == *.txt ] || [ "$file" == *.sh ] || [ "$file" == *.md ] || [ "$file" == *.lua ] || [ "$file" == *.conf ] || [ "$file" == .*rc ] || [ "$file" == *rc ] || [ "$file" == autostart ] || [ "$file" == *.log ] || [ "$file" == *.go ] || [ "$file" == *.mod ]; then
-                nvim -p "$SELECTION" || exit 1
-            elif [ "$file" == *.docx ] || [ "$file" == *.odt ]; then
-                /usr/bin/libreoffice "$SELECTION" || exit 1
-            elif [ "$file" == *.jpg ] || [ "$file" == *.png ]; then
-                /usr/bin/sxiv "$SELECTION" || exit 1
-            elif [ "$file" == *.xcf ]; then
-                /usr/bin/gimp "$SELECTION" || exit 1
+# 	depending on the type of file  selected open with proper program
+    if [ -f "${my_selection}" ]; then
+        for my_file in "${my_selection}"; do
+            if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then
+                nvim -p "${my_selection}" || exit 1
+            elif [ "${my_file}" == *.docx ] || [ "${my_file}" == *.odt ]; then
+                /usr/bin/libreoffice "${my_selection}" || exit 1
+            elif [ "${my_file}" == *.jpg ] || [ "${my_file}" == *.png ]; then
+                /usr/bin/sxiv "${my_selection}" || exit 1
+            elif [ "${my_file}" == *.xcf ]; then
+                /usr/bin/gimp "${my_selection}" || exit 1
             else
-                nvim -p "$SELECTION" || exit 1
+                nvim -p "${my_selection}" || exit 1
             fi
         done
     fi
 done
-#popd || exit 1
-cd "$OLDPWD" || exit 1
+# go back to where you were last
+cd "${OLDPWD}" || exit 1
 exit 0

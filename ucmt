@@ -1,4 +1,13 @@
 #!/bin/sh
+# this is specifically for integration with vim
+# using the "!" in normal mode and will take any given line and add a comment
+# line.
+# example:
+# !! will put you in command mode with :.! means this line
+# :.!uvcmt will uncomment the line
+# !} will put you in command mode with :.,#! means the rest of the code block/
+# paragraph so :.,#!uvcmt will uncomment the rest of the code block
+# default comment is # , can change comment sign with uvcmt //  for goloang
 
 # Check if IFS is provided
 if [ -z "$1" ]; then

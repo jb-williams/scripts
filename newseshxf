@@ -1,0 +1,4 @@
+#!/usr/bin/sh
+# create a new tmux sessions
+/usr/bin/tmux new -s "${1}" -d \; switch-client -t "${1}" \; list-sessions || exit 1
+

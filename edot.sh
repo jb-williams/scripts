@@ -3,7 +3,7 @@
 #   _____  _____  _____
 set -eou pipefail
 clear
-OPTIONS=("localrc
+my_options=("localrc
 bash_aliases
 alacritty
 tmux-conf
@@ -34,172 +34,172 @@ EXIT")
 
 while true;
 do
-    CHOICE="$(/usr/bin/echo -e "${OPTIONS[@]}" | /usr/bin/fzf --prompt="Select a File : " --header-first --border=rounded --margin=5% --color=dark --height 100% --reverse --header="           CONFIGS " --info=hidden --header-first --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:65%)"
+    my_choice="$(/usr/bin/echo -e "${my_options[@]}" | /usr/bin/fzf --prompt="Select a File : " --header-first --border=rounded --margin=5% --color=dark --height 100% --reverse --header="           CONFIGS " --info=hidden --header-first --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:65%)"
 
-    case "$CHOICE" in
+    case "${my_choice}" in
 		localrc)
-			CHOICE="$HOME/.localrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.localrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		bash_aliases)
-			CHOICE="$HOME/.bash_aliases"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.bash_aliases"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		alacritty)
-			CHOICE="$HOME/.config/alacritty/alacritty.toml"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.config/alacritty/alacritty.toml"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		tmux-conf)
-			CHOICE="$HOME/.tmux.conf"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.tmux.conf"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		vimrc)
-			CHOICE="$HOME/.config/nvim"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.config/nvim"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nnvim $choice"
+				#tmux neww bash -c "nnvim ${my_choice}"
 			#fi
 			;;
 		edot)
-			CHOICE="$HOME/scripts/edot.sh"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/scripts/edot.sh"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice.sh"
+				#nvim "${my_choice}.sh"
 			#else
-				#tmux neww bash -c "nvim $choice.sh"
+				#tmux neww bash -c "nvim ${my_choice}.sh"
 			#fi
 			;;
 		scripts)
-			CHOICE="$HOME/scripts"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/scripts"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nnvim $choice"
+				#tmux neww bash -c "nnvim ${my_choice}"
 			#fi
 			;;
 		exrc)
-			CHOICE="$HOME/.exrc"
-			/usr/bin/nvi "$CHOICE"
+			my_choice="${HOME}/.exrc"
+			/usr/bin/nvi "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		inputrc)
-			CHOICE="$HOME/.inputrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.inputrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		curlrc)
-			CHOICE="$HOME/.curlrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.curlrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		vifmrc)
-			CHOICE="$HOME/.config/vifm/vifmrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.config/vifm/vifmrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nnvim $choice"
+				#tmux neww bash -c "nnvim ${my_choice}"
 			#fi
 			;;
 		taskrc)
-			CHOICE="$HOME/.taskrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.taskrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		bashrc)
-			CHOICE="$HOME/.bashrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.bashrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
         bash_profile)
-			CHOICE="$HOME/.bash_profile"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.bash_profile"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
             ;;
 		Xresources)
-            CHOICE="$HOME/.Xresources"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+            my_choice="${HOME}/.Xresources"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
             ;;
 		xsession)
-			CHOICE="$HOME/.xsession"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.xsession"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
 		steam-cfg)
-			/usr/bin/"${SCRIPTSDIR}"/vimprev "$HOME"/.steam/debian-installation/steamapps/common/Counter-Strike\ Global\ Offensive/game/csgo/cfg/autoexec.cfg
+			/usr/bin/"${SCRIPTDIR}"/vimprev "${HOME}"/.steam/debian-installation/steamapps/common/Counter-Strike\ Global\ Offensive/game/csgo/cfg/autoexec.cfg
 			;;
 		ackrc)
-			CHOICE="$HOME/.ackrc"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.ackrc"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
         ctags)
-			CHOICE="$HOME/.ctags"
-			"${SCRIPTSDIR}"/vimprev "$CHOICE"
+			my_choice="${HOME}/.ctags"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-				#nvim "$choice"
+				#nvim "${my_choice}"
 			#else
-				#tmux neww bash -c "nvim $choice"
+				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
             ;;
         QUIT)

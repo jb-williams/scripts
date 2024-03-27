@@ -1,0 +1,4 @@
+#!/bin/sh
+# check journalctl
+sudo journalctl -p 3 -xb || exit 1
+exit 0

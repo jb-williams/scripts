@@ -1,24 +1,24 @@
 #!/bin/sh
-# set -eou pipefail
-MYGITPATH="${HOME}/Gits"
-REPOURL="$1"
-REPONAME="$(/usr/bin/echo \""$REPOURL"\" | awk -F"/" '{print $NF}' | cut -d "." -f 1)"
-if [ ! -d "$MYGITPATH" ]; then
-	mkdir -p "$MYGITPATH"
+# checks if repo exists, if not clones it to ~/Gits by default
+my_git_path="${HOME}/Gits"
+repo_url="${1}"
+repo_name="$(/usr/bin/echo \""${repo_url}"\" | awk -F"/" '{print $NF}' | cut -d "." -f 1)"
+if [ ! -d "${my_git_path}" ]; then
+	mkdir -p "${my_git_path}"
 fi
-if [ -z "$REPOURL" ]; then
+if [ -z "${repo_url}" ]; then
     printf "\n\tusage: ghclone <cloneurl>\n" && exit 1
 fi
-if [ -z "$REPONAME" ]; then
-	printf "\n\tunable to get data: \"%s\"\n" "$REPONAME" && exit 1
+if [ -z "${repo_name}" ]; then
+	printf "\n\tunable to get data: \"%s\"\n" "${repo_name}" && exit 1
 fi
-if [ -d "$MYGITPATH/$REPONAME" ]; then
-	printf "\n\tRepo \"%s\" already exists in \"%s\"\n" "$REPONAME" "$MYGITPATH" && exit 1
+if [ -d "${my_git_path}/${repo_name}" ]; then
+	printf "\n\tRepo \"%s\" already exists in \"%s\"\n" "${repo_name}" "${my_git_path}" && exit 1
 fi
-printf "gitpath: %s\nrepourl: %s\nreponame: %s\n" "$MYGITPATH" "$REPOURL" "$REPONAME"
-# pushd "$MYGITPATH" || exit 1
-cd "$MYGITPATH" || exit 1
-git clone "$REPOURL" || exit 1
-# popd || exit 1
-cd "$OLDPWD" || exit 1
+
+printf "gitpath: %s\nrepo_url: %s\nrepo_name: %s\n" "${my_git_path}" "${repo_url}" "${repo_name}"
+
+cd "${my_git_path}" || exit 1
+git clone "${repo_url}" || exit 1
+cd "${OLDPWD}" || exit 1
 exit 0

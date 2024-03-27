@@ -1,25 +1,26 @@
 #!/bin/bash
+# will print out the help menu of any command
 # set -eou pipefail
 
 if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
 # 	get command or keyword/phrase
-	read -r -p "help menu: " QUERY
-	[ "$QUERY" ] || exit 1
+	read -r -p "help menu: " my_query
+	[ "${my_query}" ] || exit 1
 # 	check if command is a builtin
-	if ! command -v "$QUERY" &>/dev/null; then
-		printf "\n\t%s not found\n" "$QUERY" && exit 1
+	if ! command -v "${my_query}" &>/dev/null; then
+		printf "\n\t%s not found\n" "${my_query}" && exit 1
 	else
-		"$QUERY" --help 2>&1 | \less || exit 1
+		"${my_query}" --help 2>&1 | \less || exit 1
 		exit 0
 	fi
 # if /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
 elif /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-	read -r -p "help menu: " QUERY
-	[ "$QUERY" ] || exit 1
-	if ! command -v "$QUERY" &>/dev/null; then
-		printf "\n\t%s not found\n" "$QUERY" && exit 1
+	read -r -p "help menu: " my_query
+	[ "${my_query}" ] || exit 1
+	if ! command -v "${my_query}" &>/dev/null; then
+		printf "\n\t%s not found\n" "${my_query}" && exit 1
 	else
-		tmux neww bash -c "$QUERY --help 2>&1 | \less" || exit 1
+		tmux neww bash -c "${my_query} --help 2>&1 | \less" || exit 1
 		exit 0
 	fi
 fi

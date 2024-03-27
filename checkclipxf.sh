@@ -1,4 +1,6 @@
 #!/bin/sh
+# checks if there is anything in the tmp clip_file, bat/cat it if so, if not,
+# create tmp clip_file
 normal="\e[0m"
 bold="\e[1m"
 green="\e[32m"
@@ -13,16 +15,16 @@ else
 	exit 1
 fi
 
-CLIPFILE="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
+clip_file="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
 
-if [ -f "${CLIPFILE}" ]; then
-	"$HOME"/.cargo/bin/bat -p "$CLIPFILE"
+if [ -f "${clip_file}" ]; then
+	"${HOME}"/.cargo/bin/bat -p "${clip_file}"
 else
-    /usr/bin/touch "$CLIPFILE" \
-		&& /usr/bin/chmod 600 "$CLIPFILE" \
-		&& printf "%s\n" "$(/usr/bin/xclip -sel c -o)" >> "$CLIPFILE" \
-		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!\n" "$CLIPFILE" \
-		&& "$HOME"/.cargo/bin/bat -p "$CLIPFILE"
+    /usr/bin/touch "${clip_file}" \
+		&& /usr/bin/chmod 600 "${clip_file}" \
+		&& printf "%s\n" "$(/usr/bin/xclip -sel c -o)" >> "${clip_file}" \
+		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!\n" "${clip_file}" \
+		&& "${HOME}"/.cargo/bin/bat -p "${clip_file}"
 fi
 
 

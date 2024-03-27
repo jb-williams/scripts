@@ -1,0 +1,5 @@
+#!/bin/sh
+# get the largest file in current directory
+/usr/bin/du -h --max-depth=1 | sort -h || exit 1
+exit 0
+

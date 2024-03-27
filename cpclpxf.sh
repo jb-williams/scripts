@@ -1,4 +1,5 @@
 #!/bin/sh
+# manages copying to clipfile and makes it if it doesnt exist
 # set -eo pipefail
 normal="\e[0m"
 bold="\e[1m"
@@ -14,19 +15,19 @@ else
 	exit 1
 fi
 
-CLIPFILE="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
+clip_file="${TEMPDIR}/tmpclp-$(date '+%m-%d-%Y').txt"
 
-# if clipfile exists copy clipboard into clipfile
-if [ -f "$CLIPFILE" ]; then
-    /usr/bin/echo -e "$(/usr/bin/xclip -sel c -o)" >> "$CLIPFILE"
+# if clip_file exists copy clipboard into clipfile
+if [ -f "${clip_file}" ]; then
+    /usr/bin/echo -e "$(/usr/bin/xclip -sel c -o)" >> "${clip_file}"
 
-# if clipfile exists, create it, then copy clipboard into clipfile
+# if clip_file exists, create it, then copy clipboard into clipfile
 else
-    /usr/bin/touch "$CLIPFILE" \
-		&& /usr/bin/chmod 600 "$CLIPFILE" \
-		&& /usr/bin/echo -e "$(/usr/bin/xclip -sel c -o)" >> "$CLIPFILE"
-# 		&& /usr/bin/echo -e "$(/usr/bin/xclip -sel c -o)" >> "$CLIPFILE" \
-# 		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!" "$CLIPFILE"
+    /usr/bin/touch "${clip_file}" \
+		&& /usr/bin/chmod 600 "${clip_file}" \
+		&& /usr/bin/echo -e "$(/usr/bin/xclip -sel c -o)" >> "${clip_file}"
+# 		&& /usr/bin/echo -e "$(/usr/bin/xclip -sel c -o)" >> "${clip_file}" \
+# 		&& printf "${green}No ${bold}${orange}Clipman${normal}${green}, empty ${bold}%s${normal}${green} created!" "${clip_file}"
 fi
 exit 0
 

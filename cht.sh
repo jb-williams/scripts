@@ -1,24 +1,30 @@
 #!/bin/bash
 set -eou pipefail
-LANGUAGES=("bash
+# query cht.sh about items
+# add items to the arrays to make them available to query
+languages=("bash
+sh
 golang
+perl
 rust
 c
 cpp
 lua")
 
-CORE_UTILSS=("xargs
+core_utilss=("xargs
+bc
+test
 find
 mv
 sed
 awk")
 
-SELECTED=$(printf "%s\n%s" "${LANGUAGES[@]}" "${CORE_UTILSS[@]}" | fzf --border --margin=5% --color=dark --height=100% --reverse)
-read -p "query: " -r QUERY
+my_selected=$(printf "%s\n%s" "${languages[@]}" "${core_utilss[@]}" | fzf --border --margin=5% --color=dark --height=100% --reverse)
+read -p "query: " -r query
 # read -p "query(lang keyword): " -r query
 
-if printf "%s" "${LANGUAGES[@]}" | grep -qs "$SELECTED"; then
-	tmux neww bash -c "curl cht.sh/$SELECTED/$(echo "$QUERY" | tr ' ' '+') & while [ : ]; do sleep 1; done" || exit 1
+if printf "%s" "${languages[@]}" | grep -qs "${my_selected}"; then
+	tmux neww bash -c "curl cht.sh/${my_selected}/$(echo "${query}" | tr ' ' '+') & while [ : ]; do sleep 1; done" || exit 1
 else
-	tmux neww bash -c "curl cht.sh/$SELECTED~$(echo "$QUERY" | tr ' ' '+') & while [ : ]; do sleep 1; done" || exit 1
+	tmux neww bash -c "curl cht.sh/${my_selected}~$(echo "${query}" | tr ' ' '+') & while [ : ]; do sleep 1; done" || exit 1
 fi
