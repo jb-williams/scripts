@@ -6,10 +6,21 @@ my_files="$(/usr/bin/grep -HRniEI "${*}" "${PWD}" | /usr/bin/awk -F ':' '{print 
 if [ -z "${my_files}" ]; then 
 	printf "no match found" && exit 1
 fi 
+
+# comment if not using 'exa' or 'bat'
+
 my_selection="$( printf '%s' "${my_files}" | /usr/bin/fzf -m --header-first --header='gWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' my_file_pre="$(echo $(echo {}))";
 		echo;
 		exa -a --color=always "${my_file_pre}";
 		bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+
+# uncomment if not using 'exa' or 'bat'
+
+# my_selection="$( printf '%s' "${my_files}" | /usr/bin/fzf -m --header-first --header='gWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' my_file_pre="$(echo $(echo {}))";
+# 		echo;
+# 		/bin/ls -a --color=always "${my_file_pre}";
+# 		/bin/cat --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+
 if [ -f "${my_selection}" ]; then
 	for my_file in "${my_selection}"; do
 		if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then

@@ -10,11 +10,24 @@ while true; do
 	if [ -z "${find_files}" ]; then 
 		printf "no match found" && exit 1
 	fi 
+	
+	
+	
+# comment if not using 'exa' or 'bat'
 # 	if files are found with matching pattern display them with fzf
+
 	my_selection="$(printf '%s' "${find_files}" | /usr/bin/fzf -m --header-first --header='compWiki:' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
             echo;
             exa -a --color=always "${file_pre}";
             bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+
+# uncomment if not using 'exa' or 'bat'
+
+# 	my_selection="$(printf '%s' "${find_files}" | /usr/bin/fzf -m --header-first --header='compWiki:' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
+#             echo;
+#             /bin/ls -a --color=always "${file_pre}";
+#             /bin/cat --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+
 # 	depending on the type of file  selected open with proper program
     if [ -f "${my_selection}" ]; then
         for my_file in "${my_selection}"; do
