@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 # starts up my beginning setup for tmux
 #set -x
 list_sessions="$(tmux list-sessions | grep -iE 'main|diary|attached' 2>/dev/null)"
