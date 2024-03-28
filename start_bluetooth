@@ -1,2 +1,0 @@
-#!/bin/sh
-sudo systemctl start bluetooth.service && sudo systemctl start blueman-mechanism.service
