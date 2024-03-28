@@ -1,5 +1,10 @@
 # Scripts
 * A Collection of Scripts I've Written/am Working on
+
+*scripts are for personal use,* **Use at Own Risk!**
+
+*may not a link or description for every script in repo*
+
 * [awk-abbrev-pwd.sh](https://github.com/jb-williams/scripts/blob/main/awk-abbrev-pwd.sh) -- for tmux status bar, abbreviating pwd
 * [biggest](https://github.com/jb-williams/scripts/blob/main/biggest) -- shows largest file in pwd
 * [checkclipxf.sh](https://github.com/jb-williams/scripts/blob/main/checkclipxf.sh) -- checks if there is anything on the tmp clipboard without fzf
