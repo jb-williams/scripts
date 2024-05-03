@@ -67,10 +67,12 @@ checkUpdate () {
 
 changePerm () {
     ## takes in file name if its the binary 755, if man 644
-    if [ "$(echo "${1}" | /usr/bin/awk -F'/' '{print $NF}')" = "alacritty" ]; then
+    if [ "$(printf "%s" "${1}" | /usr/bin/awk -F'/' '{print $NF}')" = "alacritty" ]; then
+#    if [ "$(echo "${1}" | /usr/bin/awk -F'/' '{print $NF}')" = "alacritty" ]; then
 #         /usr/bin/sudo chmod u=rwx,g=rx,o=rx "$1" || printf "%s %s!" "failed changing perm on" "${1}${2}"
         /usr/bin/sudo chmod u=rwx,g=rx,o=rx "${1}" || printf "%s %s%s!" "failed changing perm on" "${1}" "${2}"
-    elif [ "$(echo "${1}" | /usr/bin/awk -F'.' '{print $NF}')" = "gz" ]; then
+    elif [ "$(printf "%s" "${1}" | /usr/bin/awk -F'.' '{print $NF}')" = "gz" ]; then
+#    elif [ "$(echo "${1}" | /usr/bin/awk -F'.' '{print $NF}')" = "gz" ]; then
         /usr/bin/sudo chmod u=rw,g=r,o=r  "${1}" || printf "%s %s!\n" "failed changing perm on" "${1}"
     else
         printf "%s!\n" "some error, wasn't passed anything named 'alacritty' or 'gz'" && exit 2
@@ -85,13 +87,15 @@ copyFile () {
 
 buildBin () {
     /usr/bin/git pull || exit 1
-    ~/.cargo/bin/cargo build --release --no-default-features --features=x11 || exit 1
+    "${HOME}"/.cargo/bin/cargo build --release --no-default-features --features=x11 || exit 1
+#    ~/.cargo/bin/cargo build --release --no-default-features --features=x11 || exit 1
     return
 }
 
 buildMan () {
     old_filename="${1}"
-    new_filename="$(echo "${old_filename}" | /usr/bin/awk -F'.' '{print $1"."$2}')"
+    new_filename="$(printf "%s"  "${old_filename}" | /usr/bin/awk -F'.' '{print $1"."$2}')"
+#   new_filename="$(echo "${old_filename}" | /usr/bin/awk -F'.' '{print $1"."$2}')"
 #   which_man="$(echo "$new_filename" | /usr/bin/awk -F'.' '{print $2}')"
     /usr/bin/scdoc < "${old_filename}" >> "${new_filename}" || printf "%s %s!\n" "failed making sdoc from" "${old_filename}"
     /usr/bin/gzip -f "${new_filename}" || printf "%s %s!\n" "failed gzipping" "${new_filename}"

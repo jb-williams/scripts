@@ -1,12 +1,12 @@
 #!/bin/bash
-# set -eou pipefail
-clear
+set -eou pipefail
+# clear
 cd "${HOME}"/.config/vimwiki/docs || exit 1
 while true; do
 	find_my_files="$(/usr/bin/grep -HRniEI "${*}" ./security | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u)"
 	if [ -z "${find_my_files}" ]; then 
 		printf "no match found" && exit 1
-	fi 
+	fi
 
 # comment if not using 'exa' or 'bat'
 
@@ -25,7 +25,7 @@ while true; do
     if [ -f "${my_selection}" ]; then
         for my_file in ${my_selection}; do
             if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then
-                vim "${my_selection}" || exit 1
+                nvim "${my_selection}" || exit 1
             elif [ "${my_file}" == *.docx ] || [ "${my_file}" == *.odt ]; then
                 /usr/bin/libreoffice "${my_selection}" || exit 1
             elif [ "${my_file}" == *.jpg ] || [ "${my_file}" == *.png ]; then
@@ -33,7 +33,7 @@ while true; do
             elif [ "${my_file}" == *.xcf ]; then
                 /usr/bin/gimp "${my_selection}" || exit 1
             else
-                vim "${my_selection}" || exit 1
+                nvim "${my_selection}" || exit 1
             fi
         done
     fi

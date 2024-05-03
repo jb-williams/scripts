@@ -30,7 +30,7 @@ read -r -p "manpages: " my_query
 
 # check if command is a builtin
 if [ "$(type -ta "${my_query}" | head -1)" == "builtin" ] && [ "${my_query}" != "test" ]; then
-	tmux neww bash -c "man $(echo "${SHELL}" | awk -F'/' '{print $NF}') | \less '+/${my_query}\ \['" || exit 1
+	tmux neww bash -c "man $(echo "${SHELL}" | awk -F'/' '{print $NF}') | /bin/less '+/${my_query}\ \['" || exit 1
 
 # check if there is manpage
 elif [ "$(apropos "${my_query}" &>/dev/null;printf '%s' "$?")" == "0" ] ; then

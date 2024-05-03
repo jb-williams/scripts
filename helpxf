@@ -20,7 +20,8 @@ elif /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
 	if ! command -v "${my_query}" &>/dev/null; then
 		printf "\n\t%s not found\n" "${my_query}" && exit 1
 	else
-		tmux neww bash -c "${my_query} --help 2>&1 | \less" || exit 1
+# 		tmux neww bash -c "${my_query} --help 2>&1 | \less" || exit 1
+ 		tmux neww bash -c "${my_query} --help 2>&1 | /bin/less" || exit 1
 		exit 0
 	fi
 fi

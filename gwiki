@@ -4,7 +4,7 @@ clear
 cd "${HOME}"/.config/vimwiki || exit 1
 my_files="$(/usr/bin/grep -HRniEI "${*}" "${PWD}" | /usr/bin/awk -F ':' '{print $1}' | /usr/bin/sort -u)"
 if [ -z "${my_files}" ]; then 
-	printf "no match found" && exit 1
+	printf "no match found\n" && exit 1
 fi 
 
 # comment if not using 'exa' or 'bat'

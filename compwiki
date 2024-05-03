@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eou pipefail
+# set -x
 #clear
 # cd to documents wiki
 cd "${HOME}"/.config/vimwiki/docs || exit 1
@@ -9,10 +10,8 @@ while true; do
 #	exit if no files found with matching pattern
 	if [ -z "${find_files}" ]; then 
 		printf "no match found" && exit 1
-	fi 
-	
-	
-	
+	fi
+
 # comment if not using 'exa' or 'bat'
 # 	if files are found with matching pattern display them with fzf
 
@@ -31,16 +30,25 @@ while true; do
 # 	depending on the type of file  selected open with proper program
     if [ -f "${my_selection}" ]; then
         for my_file in "${my_selection}"; do
-            if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then
-                nvim -p "${my_selection}" || exit 1
-            elif [ "${my_file}" == *.docx ] || [ "${my_file}" == *.odt ]; then
-                /usr/bin/libreoffice "${my_selection}" || exit 1
+# 			the_selection="$(echo "${my_selection}" | sed 's/\.\//docs\//')"
+			the_selection="$(echo "${my_selection}" | sed 's|\./|/docs/|; s|\.[^.]*$||')"
+# 			echo "${my_file}"
+#             if [ "${my_file}" == *.md ]; then
+            #if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then
+				#### this statement is false some how!!!!
+				# echo "${the_selection}"
+# 				continue
+#                 /opt/nvim-linux64/bin/nvim -p -c "VimwikiIndex" -c "VimwikiGoto "${the_selection}"" || exit 1
+            if [ "${my_file}" == *.docx ] || [ "${my_file}" == *.odt ]; then
+#             elif [ "${my_file}" == *.docx ] || [ "${my_file}" == *.odt ]; then
+                /usr/bin/libreoffice "${the_selection}" || exit 1
             elif [ "${my_file}" == *.jpg ] || [ "${my_file}" == *.png ]; then
-                /usr/bin/sxiv "${my_selection}" || exit 1
+                /usr/bin/sxiv "${the_selection}" || exit 1
             elif [ "${my_file}" == *.xcf ]; then
-                /usr/bin/gimp "${my_selection}" || exit 1
+                /usr/bin/gimp "${the_selection}" || exit 1
             else
-                nvim -p "${my_selection}" || exit 1
+#                 echo "${the_selection}"
+                /opt/nvim-linux64/bin/nvim -p -c "VimwikiIndex" -c "VimwikiGoto "${the_selection}"" || exit 1
             fi
         done
     fi

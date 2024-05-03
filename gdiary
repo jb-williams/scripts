@@ -25,7 +25,7 @@ while true; do
 
     if [ -f "${my_selection}" ]
     then
-        for file in ${my_selection}; 
+        for my_file in ${my_selection}; 
         do
             if [ "${my_file}" == *.txt ] || [ "${my_file}" == *.sh ] || [ "${my_file}" == *.md ] || [ "${my_file}" == *.lua ] || [ "${my_file}" == *.conf ] || [ "${my_file}" == .*rc ] || [ "${my_file}" == *rc ] || [ "${my_file}" == autostart ] || [ "${my_file}" == *.log ] || [ "${my_file}" == *.go ] || [ "${my_file}" == *.mod ]; then
                 nvim "${my_selection}" || exit 1

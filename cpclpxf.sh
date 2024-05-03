@@ -5,7 +5,7 @@ normal="\e[0m"
 bold="\e[1m"
 green="\e[32m"
 orange="\e[33m"
-if ! command -v /bin/fzf &>/dev/null; then
+if ! command -v /usr/bin/fzf &>/dev/null; then
 	printf "REQUIRES PROGRAM FZF!" && exit 2
 fi
 if [ ! -d "${TEMPDIR}" ] || [ -z "${TEMPDIR}" ]; then
