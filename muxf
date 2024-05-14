@@ -1,7 +1,7 @@
 #!/bin/sh
 # starts up my beginning setup for tmux
 #set -x
-list_sessions="$(tmux list-sessions | grep -iE 'main|diary|attached' 2>/dev/null)"
+list_sessions="$(tmux list-sessions 2>/dev/null | grep -iE 'main|diary|attached' 2>/dev/null)"
 if_main="TRUE"
 if_diary="TRUE"
 if_attached="TRUE"
