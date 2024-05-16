@@ -1,7 +1,7 @@
 #!/bin/bash
-# Simple encrypt program
+# --------------------------- Simple encrypt program -------------------------- #
 
-# comment out if you don't use 'exa'
+# --------------------- comment out if you don't use 'exa' -------------------- #
 
 my_selection="$(exa -a | fzf --height 95% --reverse --info hidden --prompt "encrypt file: "  --header-first --preview ' cd_pre="$(echo $(pwd)/$(echo {}))";
                     echo $cd_pre;
@@ -9,8 +9,9 @@ my_selection="$(exa -a | fzf --height 95% --reverse --info hidden --prompt "encr
                     exa -a --color=always "${cd_pre}";
                     termpix --width 100 --true-color {} 2>/dev/null;
                     bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:65%)"
+# --------------------------------------  ------------------------------------- #
 
-# uncomment if you don't use 'exa'
+# ---------------------- uncomment if you don't use 'exa' --------------------- #
 
 # my_selection="$(/bin/ls -a | /bin/fzf --height 95% --reverse --info hidden --prompt "ENCRYPT FILE: "  --header-first --preview ' cd_pre="$(echo $(pwd)/$(echo {}))";
 #                     echo $cd_pre;
@@ -18,6 +19,7 @@ my_selection="$(exa -a | fzf --height 95% --reverse --info hidden --prompt "encr
 #                     exa -a --color=always "${cd_pre}";
 #                     termpix --width 100 --true-color {} 2>/dev/null;
 #                     bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:65%)"
+# --------------------------------------  ------------------------------------- #
 
 if [[ "${my_selection}" ]]; then
     printf "Signing %s.\n" "${my_selection}"

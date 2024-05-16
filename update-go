@@ -5,14 +5,14 @@
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
-# Should be POSIX Compliant now
-# assumes and places the extracted go directory and moves it to /usr/local/bin
+
+# ----------------------- Should be POSIX Compliant now ----------------------- #
+# assumes and places the extracted go directory and moves it to /usr/local/bin  #
 
 VERSION="0.1"
 VERBOSE="FALSE"
 CHK_VERS="FALSE"
-# Get Golang Version and the Given Golang Hash for linux
+# ----------- Get Golang Version and the Given Golang Hash for linux ---------- #
 go_DLpage="$(/usr/bin/curl https://go.dev/dl/ | /usr/bin/grep -iE 'href="/dl/go[0-9].[0-9]{2}.[0-9]{1,2}.linux-amd64.tar.gz"' -m 2 -A 6 | tail -7 | sed -e 's/<[^>]*.//g' | tr '\n' ' ')"
 go_version="$(printf "%s" "${go_DLpage}" | awk '{print $1}')"
 dl_hash="$(printf "%s" "${go_DLpage}" | awk '{print $6}')"
@@ -45,11 +45,11 @@ install_Golang () {
     printf "%s %s %s" "Curl read the current version as" "${go_version}" " : Would you like to Continue?(Y/n): "
     read -r reply
     if [ "${reply}" = "Y" ] || [ "${reply}" = "y" ]; then
-        # Download to  $TEMP dir
+# --------------------------- Download to  $TEMP dir -------------------------- #
         cd "${TEMP}" || exit 1
         /usr/bin/wget "https://go.dev/dl/${go_version}" || exit 1
 
-        # get sha256 of the file you are wanting to verify
+# -------------- get sha256 of the file you are wanting to verify ------------- #
         if [ -n "${go_version}" ] && [ -f "${go_version}" ] && [ ! -d "${go_version}" ]; then
             tar_hash="$(shasum -a256 "${go_version}" | awk '{print $1}')"
             [ -n "${tar_hash}" ] || exit 1
@@ -59,9 +59,9 @@ install_Golang () {
             exit 1
         fi
 
-        # Check if the Golang .tar.gz's hash matches the given hash from the download page
+# -- Check if the Golang .tar.gz's hash matches the given hash from the download page ------- #
         if [ "${dl_hash}" = "${tar_hash}" ]; then
-            # Decompress and move to proper place removing the older version if it exists
+#  Decompress and move to proper place removing the older version if it exists  #
             printf "%s!\n" "Hashes Match"
             /usr/bin/tar xfz "${go_version}" || exit 1
             if [ -d /usr/local/go ]; then
@@ -73,7 +73,7 @@ install_Golang () {
                 /usr/bin/rm "${go_version}" || exit 1
             fi
         else
-            # Abort if the .tar.gz's hash doesn't match the given hash from the download page
+# - Abort if the .tar.gz's hash doesn't match the given hash from the download page ----- #
             printf "%s!!!!\n" "HASHES DON'T MATCH!!! ABORTING!!"
             rm "${go_version}" || exit 1
         fi
@@ -98,7 +98,7 @@ shift $((OPTIND - 1))
 [ "$CHK_VERS" = "TRUE" ] && printf "#\n#\t%s\n" "${0##*/}"
 [ "$CHK_VERS" = "TRUE" ] && printf "%s\n" "# Version........: ${VERSION}" && exit 0
 
-# Prompt User, asking if they want to continue
+# ---------------- Prompt User, asking if they want to continue --------------- #
 if [ -z "${local_go}" ]; then
     printf "%s!\n" "Golang not Installed yet"
     install_Golang || exit 0

@@ -1,0 +1,51 @@
+#!/bin/bash
+## this script takes STDIN or standard argument and creates a header from it
+## mostly used by typing !! in normal mode in vim and sending the entire line
+## to this script and it outputs the header formate back into the file you 
+## are working on
+
+# ------------------------- Calculate Beginning Dashes ------------------------ #
+create_dashes() {
+	local text_length
+	local dash_count
+    text_length="${#1}"
+	dash_count=$(( (76 - text_length) / 2 )) # 76 is the width of the terminal without the "# - " and " - #"
+    printf '%*s' "${dash_count}" | tr ' ' '-'
+}
+
+# -------------------------- Caclulate Ending Dashes -------------------------- #
+create_end_dashes() {
+	local dash_length
+    local text_length
+	local end_dash_count
+	dash_length="${#1}"
+    text_length="${#2}"
+	end_dash_count=$(( 76 - (text_length + dash_length) ))
+    printf '%*s' "${end_dash_count}" | tr ' ' '-'
+
+}
+
+# ----------------------------- Create the Header ----------------------------- #
+create_header() {
+	local text
+	local dashes
+	local end_dashes
+    text="${*}"
+    dashes="$(create_dashes "${text}")"
+	end_dashes="$(create_end_dashes "${dashes} ${text}")"
+    printf "# %s %s %s #" "${dashes}" "${text}" "${end_dashes}"
+}
+
+# ------------------------------ Main Delegation ------------------------------ #
+main() {
+	local text
+	text="${1:-$(cat)}"
+    create_header "${text}"
+}
+
+# ---------------------- Checks for STDIN or Standard ARG --------------------- #
+if [ -z "${*}" ]; then
+	main
+else
+	main "${*}"
+fi

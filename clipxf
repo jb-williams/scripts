@@ -1,5 +1,6 @@
 #!/bin/sh
-# main script for my tmp clip_file
+# ---------------------- main script for my tmp clip_file --------------------- #
+
 # set -eou pipefail
 # clear
 normal="\e[0m"

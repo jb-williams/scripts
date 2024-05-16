@@ -1,5 +1,6 @@
 #!/bin/sh
-# top 10 cpu usage programs
+# ------------------------- top 10 cpu usage programs ------------------------- #
+
 ps auxf | sort -nr -k 3 | head -10 || exit 1
 exit 0
 

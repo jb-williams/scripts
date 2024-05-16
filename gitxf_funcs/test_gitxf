@@ -1,12 +1,6 @@
 #!/bin/bash
 #/bin/zsh
 #/usr/bin/ksh93
-################################################################
-#### 
-#### This script will run in KornShell93, Zshell, or Bash, all you need to do 
-#### is put the desired "shebang" line at the top of the script.
-#### 
-################################################################
 REQUIREMENTS=("fzf")
 for SINGLE in "${REQUIREMENTS[@]}"; do
 	if ! command -v "$SINGLE" &>/dev/null; then
@@ -31,7 +25,12 @@ done
 	#source $file
 #done
 #export -f "${HOME}"/functions/gitxf_funcs/xf_action
-source "${HOME}"/functions/gitxf_funcs/xf_action
+if [ -f "${HOME}"/functions/gitxf_funcs/xf_action ]; then
+	source "${HOME}"/functions/gitxf_funcs/xf_action || exit 1
+else
+	printf "xf_action not found" && exit 1
+fi
+
 #export FPATH=${HOME}/functions/gitxf
 
 xf_action "${@}"

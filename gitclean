@@ -1,5 +1,6 @@
 #!/bin/sh
-# cleans up a git repo reducing its size
+# ------------------- cleans up a git repo reducing its size ------------------ #
+
 cleanGit() {
 	git remote prune origin && git repack && git prune-packed && git reflog expire --expire=1.month.ago && git gc --aggressive
 }

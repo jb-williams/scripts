@@ -1,5 +1,7 @@
 #!/bin/bash
-# hacked together way of switching between github gitlab
+# ----------- hacked together way of switching between github gitlab ---------- #
+# --------------- and pushing/pulling or checking the whole repo -------------- #
+
 my_action="${1}"
 my_repo="${2}"
 

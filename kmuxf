@@ -1,4 +1,5 @@
 #!/bin/sh
-# kill all tmux sessions/server
+# ----------------------- kill all tmux sessions/server ----------------------- #
+
 /usr/bin/tmux kill-server && exit 0
 

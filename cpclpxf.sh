@@ -1,5 +1,6 @@
 #!/bin/sh
-# manages copying to clipfile and makes it if it doesnt exist
+# -------- manages copying to clipfile and makes it if it doesnt exist -------- #
+
 # set -eo pipefail
 normal="\e[0m"
 bold="\e[1m"

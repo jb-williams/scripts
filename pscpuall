@@ -1,5 +1,5 @@
 #!/bin/sh
-# all cpu usage programs
+# --------------------------- all cpu usage programs -------------------------- #
 ps auxf | sort -nr -k 3 || exit 1
 exit 0
 

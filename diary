@@ -1,4 +1,5 @@
 #!/bin/sh
+# ---------------------- opens to my daily notes/journal ---------------------- #
 
 cd "${WIKIDIR}" || exit 1
 /opt/nvim-linux64/bin/nvim +VimwikiDiaryIndex || exit 2

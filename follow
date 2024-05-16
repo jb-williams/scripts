@@ -1,5 +1,6 @@
 #!/bin/sh
-# will follow data being added to end of file
+# ---------------- will follow data being added to end of file ---------------- #
+
 /usr/bin/tail -f -n +1 "${1}" || exit 1
 exit 0
 

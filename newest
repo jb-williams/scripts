@@ -1,5 +1,6 @@
 #!/bin/sh
-# show newest file in current directory
+# ------------------- show newest file in current directory ------------------- #
+
 /usr/bin/ls -t | head -n1 || exit 2
 exit 0
 

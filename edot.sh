@@ -1,5 +1,5 @@
 #!/bin/bash
-# This was a script to give me a menu of my commonly edited configuration files.
+# - This was a script to give me a menu of my commonly edited configuration files. ---- #
 #   _____  _____  _____
 set -eou pipefail
 clear

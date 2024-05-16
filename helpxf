@@ -1,12 +1,13 @@
 #!/bin/bash
-# will print out the help menu of any command
+# ---------------- will print out the help menu of any command ---------------- #
+
 # set -eou pipefail
 
 if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
-# 	get command or keyword/phrase
+# ----------------------- get command or keyword/phrase ----------------------- #
 	read -r -p "help menu: " my_query
 	[ "${my_query}" ] || exit 1
-# 	check if command is a builtin
+# ----------------------- check if command is a builtin ----------------------- #
 	if ! command -v "${my_query}" &>/dev/null; then
 		printf "\n\t%s not found\n" "${my_query}" && exit 1
 	else

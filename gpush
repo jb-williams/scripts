@@ -1,13 +1,14 @@
 #!/bin/bash
-# USE -- ctrl+j and ctrl+k down/up respectively for file names
-# USE shift+tab to select multiple items
+# -------- USE -- ctrl+j and ctrl+k down/up respectively for file names ------- #
+# ------------------- USE shift+tab to select multiple items ------------------ #
 # (not implemented properly yet) # if preview of file is there use -- alt+j and alt+k down/up respectively for the preview of file contents
+
 set -o pipefail
 my_reqs=("fzf")
 for each_single in "${my_reqs[@]}"; do
 	if ! command -v "${each_single}" &>/dev/null; then
 		printf "\n\t%s not found\n" "${each_single}"
-	# do you want to install?
+# -------------------------- do you want to install? -------------------------- #
 		read -p "Would you like to install?: " -n 1 -r
 		if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
 			if [[ -d "/etc/apt" ]]; then

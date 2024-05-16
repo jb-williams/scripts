@@ -1,5 +1,6 @@
 #!/bin/sh
-# grep though the diary entry in my wiki, can use regex
+# ----------- grep though the diary entry in my wiki, can use regex ----------- #
+
 # set -eou pipefail
 #clear
 cd "${HOME}"/.config/vimwiki/diary || exit 1
@@ -9,19 +10,21 @@ while true; do
 		printf "no match found" && exit 1
 	fi 
 
-# comment if not using 'exa' or 'bat'
+# -------------------- comment if not using 'exa' or 'bat' -------------------- #
 
 	my_selection="$(printf '%s' "${find_files}" | exa -r | /usr/bin/fzf -m --header-first --header='gWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
             echo;
             exa -a --color=always "${file_pre}";
             bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+# --------------------------------------  ------------------------------------- #
 
-# uncomment if not using 'exa' or 'bat'
+# ------------------- uncomment if not using 'exa' or 'bat' ------------------- #
 
 # 	my_selection="$(printf '%s' "${find_files}" | /bin/ls -r | /usr/bin/fzf -m --header-first --header='gWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' file_pre="$(echo $(echo {}))";
 #             echo;
 #             /bin/ls -a --color=always "${file_pre}";
 #             /bin/cat --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+# --------------------------------------  ------------------------------------- #
 
     if [ -f "${my_selection}" ]
     then

@@ -5,8 +5,8 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# should be POSIX compliant
-# it assumes git repositories are $HOME/Gits
+# ------------------------- should be POSIX compliant ------------------------- #
+# ----------------- it assumes git repositories are $HOME/Gits ---------------- #
 
 ###############################################################################
 # ##### CHANGE THIS IF YOU HAVE YOUR GIT REPO CLONED ELSEWHERE ################
@@ -48,7 +48,7 @@ Usage: %s [-?hvV]
 }
 
 checkUpdate () {
-    # check if remote repo is ahead of local repo
+# ---------------- check if remote repo is ahead of local repo ---------------- #
     posibleUpdate="$(/usr/bin/git remote update >/dev/null 2>&1 && /usr/bin/git status -uno | /usr/bin/grep -o "up to date")"
     if [ "${posibleUpdate}" = "up to date" ]; then
         printf "Git Repo already up to date!\n" && exit 0
@@ -66,7 +66,7 @@ checkUpdate () {
 }
 
 changePerm () {
-    ## takes in file name if its the binary 755, if man 644
+# ------------ takes in file name if its the binary 755, if man 644 ----------- #
     if [ "$(printf "%s" "${1}" | /usr/bin/awk -F'/' '{print $NF}')" = "alacritty" ]; then
 #    if [ "$(echo "${1}" | /usr/bin/awk -F'/' '{print $NF}')" = "alacritty" ]; then
 #         /usr/bin/sudo chmod u=rwx,g=rx,o=rx "$1" || printf "%s %s!" "failed changing perm on" "${1}${2}"
@@ -102,7 +102,7 @@ buildMan () {
     return
 }
 
-# get flags if given, version, verbose(set -x), then usage message itself
+# -- get flags if given, version, verbose(set -x), then usage message itself -- #
 while getopts "vVh?" OPTION
 do
     case "$OPTION" in
@@ -113,16 +113,16 @@ do
 done
 
 shift $((OPTIND - 1))
-# set based on flags given
+# -------------------------- set based on flags given ------------------------- #
 [ "${VERBOSE}" = "TRUE" ] && set -x
 [ "${CHK_VERS}" = "TRUE" ] && printf "#\n#\t%s\n" "${0##*/}"
 [ "${CHK_VERS}" = "TRUE" ] && printf "%s\n" "# Version........: ${VERSION}" && exit 0
 
-# check if local repo is behind
+# ----------------------- check if local repo is behind ----------------------- #
 checkUpdate || exit 1
 
 
-# Make sure man dirs are created
+# ----------------------- Make sure man dirs are created ---------------------- #
 if [ ! -d /usr/local/share/man/man1 ]; then
     /usr/bin/sudo mkdir /usr/local/share/man/man1 || exit 1
 fi
@@ -130,21 +130,21 @@ if [ ! -d /usr/local/share/man/man5 ]; then
     /usr/bin/sudo mkdir /usr/local/share/man/man5 || exit 1
 fi
 
-# compile binary
+# ------------------------------- compile binary ------------------------------ #
 buildBin || exit 1
 
-# change perm of binary
+# --------------------------- change perm of binary --------------------------- #
 changePerm "${bin_file}" || exit 1
 
-# copy binary to destination
+# ------------------------- copy binary to destination ------------------------ #
 copyFile "${bin_file}" "${bin_dest}" || exit 1
 
-# build man files
+# ------------------------------ build man files ------------------------------ #
 for each_manfile in ${man_files}; do
     buildMan "${each_manfile}" || exit 1
 done
 
-# change file permissions then copy them to proper man destination
+# ------ change file permissions then copy them to proper man destination ----- #
 for each_manfile in ${man_files}; do
     gz_file="$(/usr/bin/ls "${each_manfile}" | /usr/bin/awk -F'.' '{print $1"."$2".gz"}')"
     which_man="$(/usr/bin/ls "${each_manfile}" | /usr/bin/awk -F'.' '{print $2}')"
@@ -156,11 +156,11 @@ for each_manfile in ${man_files}; do
     fi
 done
 
-# install desktop file and update-desktop database
+# -------------- install desktop file and update-desktop database ------------- #
 /usr/bin/sudo desktop-file-install extra/linux/Alacritty.desktop \
     && /usr/bin/sudo update-desktop-database
 
-# Copy icon file to proper spot
+# ----------------------- Copy icon file to proper spot ----------------------- #
 /usr/bin/sudo cp extra/logo/alacritty-term+scanlines.svg /usr/share/pixmaps/Alacritty.svg \
     && /usr/bin/sudo chmod u=rw,g=r,o=r /usr/share/pixmaps/Alacritty.svg
 

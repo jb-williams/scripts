@@ -1,5 +1,6 @@
 #!/bin/sh
-# makes tmp clip_file if it doesn't exist, clears it if it does
+# ------- makes tmp clip_file if it doesn't exist, clears it if it does ------- #
+
 #set -eou pipefail
 normal="\e[0m"
 bold="\e[1m"

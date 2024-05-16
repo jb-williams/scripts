@@ -1,4 +1,4 @@
 #!/bin/bash
-# used for vim integration use
+# ----------------------- easy to make executable script ---------------------- #
 chmod -x "${1}"
 # chmod -x "${@}"

@@ -1,4 +1,7 @@
 #!/bin/bash
+# -------------------- way to grep and disply my wiki notes ------------------- #
+
+
 set -eou pipefail
 # set -x
 #clear

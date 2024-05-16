@@ -27,7 +27,7 @@ xf_action() {
 	#### receipt of the HUP signal.
 	trap "configure_xf_function '${0}'" HUP
 
-	source "${HOME}"/functions/gitxf_funcs/configure_xf_function
+	source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/configure_xf_function
 
 	#### Read the configuration file and initialize variables by
 	#### sending this script a HUP signal
@@ -47,9 +47,9 @@ xf_action() {
 			'm') MSG="${OPTARG}";;
 			'v') VERBOSE="${TRUE}";;
 			'V') VERYVERB="${TRUE}";;
-			'?') source "${HOME}"/functions/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
-			'h') source "${HOME}"/functions/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
-			':') source "${HOME}"/functions/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
+			'?') source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
+			'h') source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
+			':') source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/usagemsg_xf_function && usagemsg_xf_function "${0}" "${VERSION}" && return 1 ;;
 		esac
 	done
 
@@ -108,10 +108,10 @@ xf_action() {
 	(( VERBOSE == TRUE && GXF_PUSH == TRUE )) && ${CMD_ECHO} "# Pushing Content of Repo: ${RPATH}"
 	(( VERBOSE == TRUE && GXF_PULL == TRUE )) && ${CMD_ECHO} "# Pulling Content of Repo: ${RPATH}"
 	(( VERBOSE == TRUE && GXF_CHECK == TRUE )) && ${CMD_ECHO} "# Checking Content of Repo: ${RPATH}"
-	(( GXF_PUSH == TRUE )) && source "${HOME}"/functions/gitxf_funcs/xf_push && xf_push
-	(( GXF_PULL == TRUE )) && source "${HOME}"/functions/gitxf_funcs/xf_pull && xf_pull
-	(( GXF_CHECK == TRUE )) && source  "${HOME}"/functions/gitxf_funcs/xf_check && xf_check
-	(( GXF_RURL == TRUE )) && source "${HOME}"/functions/gitxf_funcs/xf_clone && xf_clone
+	(( GXF_PUSH == TRUE )) && source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_push && xf_push
+	(( GXF_PULL == TRUE )) && source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_pull && xf_pull
+	(( GXF_CHECK == TRUE )) && source  "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_check && xf_check
+	(( GXF_RURL == TRUE )) && source "${HOME}"/Gits/xfafniros/scripts/gitxf_funcs/xf_clone && xf_clone
 
 	#${CMD_ECHO} "# MSG = ${MSG}"
 

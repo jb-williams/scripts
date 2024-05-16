@@ -1,6 +1,7 @@
 #!/bin/sh
-# checks if there is anything in the tmp clip_file, bat/cat it if so, if not,
-# create tmp clip_file
+#  checks if there is anything in the tmp clip_file, bat/cat it if so, if not,  #
+# ---------------------------- create tmp clip_file --------------------------- #
+
 normal="\e[0m"
 bold="\e[1m"
 green="\e[32m"

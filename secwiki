@@ -1,4 +1,6 @@
 #!/bin/bash
+# -------------------- grep through security notes in wiki -------------------- #
+
 set -eou pipefail
 # clear
 cd "${HOME}"/.config/vimwiki/docs || exit 1
@@ -8,19 +10,21 @@ while true; do
 		printf "no match found" && exit 1
 	fi
 
-# comment if not using 'exa' or 'bat'
+# -------------------- comment if not using 'exa' or 'bat' -------------------- #
 
 	my_selection="$(printf '%s' "${find_my_files}" | /usr/bin/fzf -m --header-first --header='secWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' my_file_pre="$(echo $(echo {}))";
             echo;
             exa -a --color=always "${my_file_pre}";
             bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+# --------------------------------------  ------------------------------------- #
 
-# uncomment if not using 'exa' or 'bat'
+# ------------------- uncomment if not using 'exa' or 'bat' ------------------- #
 
 # 	my_selection="$(printf '%s' "${find_my_files}" | /usr/bin/fzf -m --header-first --header='secWiki' --height 100% --reverse --info hidden --prompt 'PREVIEW:' --preview ' my_file_pre="$(echo $(echo {}))";
 #             echo;
 #             /bin/ls -a --color=always "${my_file_pre}";
 #             /bin/cat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:70%)"
+# --------------------------------------  ------------------------------------- #
 
     if [ -f "${my_selection}" ]; then
         for my_file in ${my_selection}; do

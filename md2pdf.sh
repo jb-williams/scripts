@@ -1,5 +1,5 @@
 #!/bin/bash
-# use pandoc to convert markdown to pdf
+# ------------------- use pandoc to convert markdown to pdf ------------------- #
 # set -eou pipefail
 
 

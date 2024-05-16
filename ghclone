@@ -1,5 +1,6 @@
 #!/bin/sh
-# checks if repo exists, if not clones it to ~/Gits by default
+# -------- checks if repo exists, if not clones it to ~/Gits by default ------- #
+
 my_git_path="${HOME}/Gits"
 repo_url="${1}"
 repo_name="$(/usr/bin/echo \""${repo_url}"\" | awk -F"/" '{print $NF}' | cut -d "." -f 1)"
