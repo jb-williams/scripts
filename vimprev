@@ -1,2 +1,7 @@
 #!/bin/bash
-VIMENV=prev /opt/nvim-linux64/bin/nvim -p "${@}"
+if [ -f /opt/nvim-linux64/bin/nvim ]; then
+
+    VIMENV=prev /opt/nvim-linux64/bin/nvim -p "${@}"
+else
+    nvi "${1}"
+fi

@@ -36,7 +36,7 @@ elif [[ "${my_action}" == "pull" ]]; then
     /usr/bin/figlet "PULL COMPLETE!!"
 
 elif [[ "${my_action}" == "check" ]]; then
-    /usr/bin/git remote update && git status -uno
+    /usr/bin/git remote update && git status -uall
     exit 0
 
 else

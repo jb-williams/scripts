@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # ------------------- show newest file in current directory ------------------- #
-
-/usr/bin/ls -t | head -n1 || exit 2
+if ! command -v "${HOME}"/.cargo/bin/eza &>/dev/null; then
+	/usr/bin/ls -lt | head -n5 || exit 2
+else
+	"${HOME}"/.cargo/bin/eza -lar -snew | head -n5 || exit 2
+fi
 exit 0
 

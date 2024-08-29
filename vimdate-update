@@ -1,4 +1,5 @@
-#!/bin/sh
-echo "# Updated : $(date)"
+#!/bin/bash
+echo "# Updated : $(printf '%(%Y-%m-%d_%H:%M:%S)T\n' -1)"
+# echo "# Updated : $(date)"
 
 

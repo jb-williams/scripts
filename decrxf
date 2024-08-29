@@ -1,16 +1,16 @@
 #!/bin/bash
 # --------------------------- Simple encrypt program -------------------------- #
 #
-# ------------------------- comment if not using 'exa' ------------------------ #
+# ------------------------- comment if not using 'eza' ------------------------ #
 
-my_selection="$(exa -a | fzf --height 95% --reverse --info hidden --prompt "ENCRYPT FILE: "  --header-first --preview ' cd_pre="$(echo $(pwd)/$(echo {}))";
+my_selection="$(eza -a | fzf --height 95% --reverse --info hidden --prompt "ENCRYPT FILE: "  --header-first --preview ' cd_pre="$(echo $(pwd)/$(echo {}))";
                     echo $cd_pre;
                     echo;
-                    exa -a --color=always "${cd_pre}";
+                    eza -a --color=always "${cd_pre}";
                     bat --style=numbers --theme=ansi --color=always {} 2>/dev/null' --bind alt-j:preview-down,alt-k:preview-up --preview-window=right:65%)"
 # --------------------------------------  ------------------------------------- #
 
-# ------------------------ uncomment if not using 'exa' ----------------------- #
+# ------------------------ uncomment if not using 'eza' ----------------------- #
 
 # my_selection="$(/bin/ls -a | fzf --height 95% --reverse --info hidden --prompt "ENCRYPT FILE: "  --header-first --preview ' cd_pre="$(echo $(pwd)/$(echo {}))";
 #                     echo $cd_pre;

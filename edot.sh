@@ -5,7 +5,7 @@ set -eou pipefail
 clear
 my_options=("localrc
 bash_aliases
-alacritty
+kitty
 tmux-conf
 vimrc
 edot
@@ -16,6 +16,7 @@ curlrc
 vifmrc
 taskrc
 bashrc
+alacritty
 bash_profile
 Xresources
 xsession
@@ -55,8 +56,8 @@ do
 				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
-		alacritty)
-			my_choice="${HOME}/.config/alacritty/alacritty.toml"
+		kitty)
+			my_choice="${HOME}/.config/kitty/kitty.conf"
 			"${SCRIPTDIR}"/vimprev "${my_choice}"
 			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
 				#nvim "${my_choice}"
@@ -154,6 +155,15 @@ do
 				#tmux neww bash -c "nvim ${my_choice}"
 			#fi
 			;;
+		alacritty)
+			my_choice="${HOME}/.config/alacritty/alacritty.toml"
+			"${SCRIPTDIR}"/vimprev "${my_choice}"
+			#if ! /usr/bin/pidof /usr/bin/tmux &>/dev/null; then
+				#nvim "${my_choice}"
+			#else
+				#tmux neww bash -c "nvim ${my_choice}"
+			#fi
+			;;
         bash_profile)
 			my_choice="${HOME}/.bash_profile"
 			"${SCRIPTDIR}"/vimprev "${my_choice}"
@@ -182,7 +192,7 @@ do
 			#fi
 			;;
 		steam-cfg)
-			/usr/bin/"${SCRIPTDIR}"/vimprev "${HOME}"/.steam/debian-installation/steamapps/common/Counter-Strike\ Global\ Offensive/game/csgo/cfg/autoexec.cfg
+			"${SCRIPTDIR}"/vimprev "${HOME}"/.steam/debian-installation/steamapps/common/Counter-Strike\ Global\ Offensive/game/csgo/cfg/autoexec.cfg
 			;;
 		ackrc)
 			my_choice="${HOME}/.ackrc"

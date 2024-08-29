@@ -14,7 +14,7 @@ for each_single in "${my_reqs[@]}"; do
 			if [[ -d "/etc/apt" ]]; then
 				sudo apt install "$each_single" || exit 1
 			elif [[ -d "/etc/pacman.d" ]]; then
-				sudp pacman -S "${each_single}" || exit 1
+				sudo pacman -S "${each_single}" || exit 1
 			else
 				printf "\n\t\tpackage not found\n\tuse your pkg manager to install %s\n" "${each_single}" && exit 1
 			fi
